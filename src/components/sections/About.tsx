@@ -17,7 +17,7 @@ export function About() {
           <div className="relative">
             <div className="overflow-hidden rounded-2xl shadow-xl" style={{ aspectRatio: "4/3" }}>
               <img
-                src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?w=700&h=525&fit=crop&auto=format"
+                src="/src/assets/images/KGC.jpg"
                 alt="Klassic Group team collaboration"
                 className="w-full h-full object-cover"
                 loading="lazy"

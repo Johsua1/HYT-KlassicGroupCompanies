@@ -23,15 +23,14 @@ export function CompanyCard({ company, onSelect }: CompanyCardProps) {
       onMouseLeave={() => setHovered(false)}
       onClick={() => onSelect(company)}
     >
-      <div className="relative overflow-hidden" style={{ aspectRatio: "16/9" }}>
+      <div className="relative overflow-hidden" style={{ aspectRatio: "16/9", background: "#F9FAFB" }}>
         <img
           src={company.image}
           alt={company.name}
-          className="w-full h-full object-cover transition-transform duration-500"
+          className="w-full h-full object-contain p-4 transition-transform duration-500"
           style={{ transform: hovered ? "scale(1.05)" : "scale(1)" }}
           loading="lazy"
         />
-        <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.2) 0%, transparent 60%)" }} />
         <span
           className="absolute top-3 left-3 px-2.5 py-1 rounded-full text-xs font-semibold"
           style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}

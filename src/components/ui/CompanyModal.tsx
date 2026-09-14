@@ -28,9 +28,8 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
         className="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-y-auto"
         role="dialog" aria-modal="true" aria-label={company.name}
       >
-        <div className="relative overflow-hidden rounded-t-2xl" style={{ aspectRatio: "16/7" }}>
-          <img src={company.image} alt={company.name} className="w-full h-full object-cover" />
-          <div className="absolute inset-0" style={{ background: "linear-gradient(to top, rgba(0,0,0,0.6) 0%, transparent 60%)" }} />
+        <div className="relative overflow-hidden rounded-t-2xl" style={{ aspectRatio: "16/7", background: "#F9FAFB" }}>
+          <img src={company.image} alt={company.name} className="w-full h-full object-contain p-8" />
           <button
             onClick={onClose}
             className="absolute top-4 right-4 w-9 h-9 bg-white/90 rounded-full flex items-center justify-center hover:bg-white transition-colors"

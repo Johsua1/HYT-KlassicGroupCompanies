@@ -59,7 +59,7 @@ export function Hero() {
           <div className="relative hidden lg:block">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl" style={{ aspectRatio: "4/3" }}>
               <img
-                src="/src/assets/images/KGC.jpg"
+                src="/src/assets/images/KGCC.png"
                 alt="Klassic Group of Companies — professional team"
                 className="w-full h-full object-cover"
                 loading="eager"

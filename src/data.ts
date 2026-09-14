@@ -21,7 +21,7 @@ export const companies: Company[] = [
     description:
       "Brains Infinite Innovations Inc. is a group of competent professionals who are dedicated in creating reliable solutions to assist you, your company, and the whole of the nation's economy.",
     services: ["Software Development", "IT Consulting", "Digital Solutions", "Systems Integration"],
-    image: "https://images.unsplash.com/photo-1581091226825-a6a2a5aee158?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/Brains.png",
     website: "https://www.brains.asia/",
     facebook: "https://www.facebook.com/brains.asia",
     instagram: "https://www.instagram.com/brainstech.ph/",
@@ -36,7 +36,7 @@ export const companies: Company[] = [
     description:
       "Klassic Solutions Inc. is a manpower services organization dedicated in providing creative solutions to companies across a wide spectrum of Philippine business according to their specific needs and requirements.",
     services: ["Manpower Outsourcing", "Recruitment", "Workforce Deployment", "HR Consulting"],
-    image: "https://images.unsplash.com/photo-1504307651254-35680f356dfd?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/KlassicSolutions.png",
     website: "https://connectorcore.com/Klassic-Solutions-PH-master/",
     facebook: "https://www.facebook.com/klassiclink",
     instagram: "https://www.instagram.com/klassicsolutions.ph/",
@@ -51,7 +51,7 @@ export const companies: Company[] = [
     description:
       "Klassic Marketing Inc. is formed to serve as an avenue for enterprises having global market access in importation and trading while processing transactions through Portress.",
     services: ["Importation", "Trading", "Global Market Access", "Transaction Processing"],
-    image: "https://images.unsplash.com/photo-1586528116311-ad8dd3c8310d?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/KlassicMarketing.png",
     website: "https://connectorcore.com/Klassic-Marketing-Inc-Website-master",
     facebook: "https://www.facebook.com/klassicmarketingincv",
     instagram: "https://www.instagram.com/klassicmarketing.ph/",
@@ -66,7 +66,7 @@ export const companies: Company[] = [
     description:
       "Westwood Development Corp. is driven by a group of individuals who are passionate about changing traditional methodologies in the construction and development industry.",
     services: ["Real Estate Development", "General Construction", "Project Management", "Property Development"],
-    image: "https://images.unsplash.com/photo-1486325212027-8081e485255e?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/WDC.png",
     website: "https://connectorcore.com/Westwood-Development-Corp-Website-master/",
     facebook: "https://www.facebook.com/Westwooddevcorp",
     instagram: "https://www.instagram.com/westwood.dev/",
@@ -81,7 +81,7 @@ export const companies: Company[] = [
     description:
       "Westwood Law Firm is a law firm that deals with the specialized practice of law to ensure that all cases are handled by the experts in the field of law where the case falls under.",
     services: ["Corporate Law", "Litigation", "Legal Advisory", "Case Management"],
-    image: "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/WestWoodLawFirm.png",
     website: "https://connectorcore.com/Westwood-Law-Firm-Website-master/",
     facebook: "https://www.facebook.com/westwoodlawph",
     instagram: "https://www.instagram.com/westwood.law/",
@@ -96,7 +96,7 @@ export const companies: Company[] = [
     description:
       "Connector is a system designed as a modular software system that aims to integrate the main functional areas of an organization's business processes into a unified system.",
     services: ["ERP Integration", "Business Process Automation", "Modular Software", "Systems Connectivity"],
-    image: "https://images.unsplash.com/photo-1518770660439-4636190af475?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/Connector.png",
     website: "https://connectorcore.com/Connector-Website-master/",
     facebook: "https://www.facebook.com/connectormode",
     instagram: "https://www.instagram.com/connector.mode/",
@@ -111,7 +111,7 @@ export const companies: Company[] = [
     description:
       "The Green Oasis is a professional landscape and design specialists dedicated to providing landscape quality services; designing attractive spaces and maintaining their functionality and beauty for homeowners.",
     services: ["Landscape Design", "Garden Maintenance", "Space Design", "Outdoor Beautification"],
-    image: "https://images.unsplash.com/photo-1416879595882-3373a0480b5b?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/TheGreenOasis.png",
     website: "https://connectorcore.com/The-Green-Oasis-Website-master",
     facebook: "https://www.facebook.com/thregreenoasisph",
     instagram: "https://www.instagram.com/thegreenoasisph/",
@@ -126,7 +126,7 @@ export const companies: Company[] = [
     description:
       "Luxurious Cleaning Co. introduced itself in the cleaning industry in September 2019. Although new in the game, it gained TRUST and a STRONG POOL OF CLIENTS through consistent quality service.",
     services: ["Residential Cleaning", "Commercial Cleaning", "Deep Cleaning", "Janitorial Services"],
-    image: "https://images.unsplash.com/photo-1581578731548-c64695cc6952?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/LuxuriousCleaningCo.jpg",
     website: "https://connectorcore.com/Luxurious-Cleaning-Website-master",
     facebook: "https://www.facebook.com/luxuriouscleaningph",
     instagram: "https://www.instagram.com/luxuriouscleaningco/",
@@ -141,7 +141,7 @@ export const companies: Company[] = [
     description:
       "HYT Foundation Inc. is a foundation for future generation leaders in which we support to enlighten and hone the youth in acquiring an adept set of business skills to prepare them for their future.",
     services: ["Youth Development", "Business Skills Training", "Leadership Programs", "Community Outreach"],
-    image: "https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/HYT.png",
     website: "https://connectorcore.com/HYT-Foundation-Inc-Website-master/",
     facebook: "https://www.facebook.com/profile.php?id=100085879536889",
     instagram: "https://www.instagram.com/connector.mode/",
@@ -156,7 +156,7 @@ export const companies: Company[] = [
     description:
       "The Finest Fit strives to deliver high-quality uniforms that leave a great impression on our customers and establish ourselves as the best uniform company in the Philippines.",
     services: ["Uniform Manufacturing", "Custom Design", "Corporate Uniforms", "School Uniforms"],
-    image: "https://images.unsplash.com/photo-1489987707025-afc232f7ea0f?w=600&h=400&fit=crop&auto=format",
+    image: "/src/assets/images/TheFinestFit.jpg",
     website: "https://connectorcore.com/The-Finest-Fit-Website-master/",
     facebook: "https://www.facebook.com/thefinestfit",
     instagram: "https://www.instagram.com/connector.mode/",

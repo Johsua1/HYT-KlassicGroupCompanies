@@ -1,18 +1,59 @@
 import { useState } from "react";
+import emailjs from '@emailjs/browser';
 import { MapPinIcon, MailIcon, PhoneIcon, ClockIcon, FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from "@/components/ui/Icons";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, CHARCOAL, SLATE, MUTED, BORDER } from "@/constants/colors";
 
 export function Contact() {
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [submitted, setSubmitted] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => { e.preventDefault(); setSubmitted(true); };
+  const handleSubmit = async (e: React.FormEvent) => { 
+    e.preventDefault();
+    setLoading(true);
+    setError("");
+
+    try {
+      // EmailJS configuration - You'll need to replace these with your actual values
+      const templateParams = {
+        from_name: form.name,
+        from_email: form.email,
+        subject: form.subject,
+        message: form.message,
+        to_email: 'bol76335@gmail.com',
+      };
+
+      // Send email using EmailJS
+      await emailjs.send(
+        'service_zu5xdwz',    // Replace with your EmailJS Service ID
+        'template_3s0w7o9',   // Replace with your EmailJS Template ID
+        templateParams,
+        'TK1-w3bQvv7O8462F'     // Replace with your EmailJS Public Key
+      );
+
+      // Success!
+      setSubmitted(true);
+      
+      // Reset form after 3 seconds
+      setTimeout(() => {
+        setForm({ name: "", email: "", subject: "", message: "" });
+        setSubmitted(false);
+      }, 3000);
+
+    } catch (err) {
+      console.error('Failed to send email:', err);
+      setError('Failed to send message. Please try again or email us directly at karmaajoshh@gmail.com');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const info = [
-    { icon: <MapPinIcon />, label: "Office Address", value: "Metro Manila, Philippines" },
-    { icon: <MailIcon />,   label: "Email",          value: "info@klassicgroup.com.ph" },
+    { icon: <MapPinIcon />, label: "Office Address", value: "Atlanta Centre Annapolis St. San Juan City, Philippines" },
+    { icon: <MailIcon />,   label: "Email",          value: "bol76335@gmail.com"},
     { icon: <PhoneIcon />,  label: "Phone",          value: "+63 (2) 8XXX-XXXX" },
-    { icon: <ClockIcon />,  label: "Business Hours", value: "Mon–Fri, 8:00 AM – 5:00 PM" },
+    { icon: <ClockIcon />,  label: "Business Hours", value: "Mon–Fri, 9:00 AM – 6:00 PM" },
   ];
 
   const inputStyle = {
@@ -84,22 +125,27 @@ export function Contact() {
                 <div className="text-5xl mb-4">✅</div>
                 <h3 className="text-xl font-bold mb-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>Message Sent!</h3>
                 <p style={{ color: SLATE }}>Thank you for reaching out. We'll get back to you within 1–2 business days.</p>
-                <button
-                  onClick={() => setSubmitted(false)}
-                  className="mt-6 px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90"
-                  style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}
-                >
-                  Send Another
-                </button>
               </div>
             ) : (
               <form onSubmit={handleSubmit} className="p-6 lg:p-8 rounded-2xl border space-y-5" style={{ borderColor: BORDER }}>
+                {error && (
+                  <div className="p-4 rounded-lg bg-red-50 border border-red-200">
+                    <p className="text-sm text-red-600">{error}</p>
+                  </div>
+                )}
+                
                 <div className="grid sm:grid-cols-2 gap-5">
                   <div className="space-y-1.5">
                     <label htmlFor="name" className="text-xs font-semibold uppercase tracking-wide" style={{ color: SLATE, fontFamily: "var(--font-display)" }}>Full Name *</label>
-                    <input id="name" type="text" required placeholder="Juan dela Cruz"
-                      value={form.name} onChange={e => setForm({ ...form, name: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors"
+                    <input 
+                      id="name" 
+                      type="text" 
+                      required 
+                      placeholder="Juan dela Cruz"
+                      value={form.name} 
+                      onChange={e => setForm({ ...form, name: e.target.value })}
+                      disabled={loading}
+                      className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors disabled:opacity-50"
                       style={inputStyle}
                       onFocus={e => (e.currentTarget.style.borderColor = GOLD)}
                       onBlur={e => (e.currentTarget.style.borderColor = BORDER)}
@@ -107,9 +153,15 @@ export function Contact() {
                   </div>
                   <div className="space-y-1.5">
                     <label htmlFor="email" className="text-xs font-semibold uppercase tracking-wide" style={{ color: SLATE, fontFamily: "var(--font-display)" }}>Email Address *</label>
-                    <input id="email" type="email" required placeholder="juan@email.com"
-                      value={form.email} onChange={e => setForm({ ...form, email: e.target.value })}
-                      className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors"
+                    <input 
+                      id="email" 
+                      type="email" 
+                      required 
+                      placeholder="juan@email.com"
+                      value={form.email} 
+                      onChange={e => setForm({ ...form, email: e.target.value })}
+                      disabled={loading}
+                      className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors disabled:opacity-50"
                       style={inputStyle}
                       onFocus={e => (e.currentTarget.style.borderColor = GOLD)}
                       onBlur={e => (e.currentTarget.style.borderColor = BORDER)}
@@ -118,9 +170,15 @@ export function Contact() {
                 </div>
                 <div className="space-y-1.5">
                   <label htmlFor="subject" className="text-xs font-semibold uppercase tracking-wide" style={{ color: SLATE, fontFamily: "var(--font-display)" }}>Subject *</label>
-                  <input id="subject" type="text" required placeholder="Business Inquiry / Career / Partnership"
-                    value={form.subject} onChange={e => setForm({ ...form, subject: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors"
+                  <input 
+                    id="subject" 
+                    type="text" 
+                    required 
+                    placeholder="Business Inquiry / Career / Partnership"
+                    value={form.subject} 
+                    onChange={e => setForm({ ...form, subject: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors disabled:opacity-50"
                     style={inputStyle}
                     onFocus={e => (e.currentTarget.style.borderColor = GOLD)}
                     onBlur={e => (e.currentTarget.style.borderColor = BORDER)}
@@ -128,9 +186,15 @@ export function Contact() {
                 </div>
                 <div className="space-y-1.5">
                   <label htmlFor="message" className="text-xs font-semibold uppercase tracking-wide" style={{ color: SLATE, fontFamily: "var(--font-display)" }}>Message *</label>
-                  <textarea id="message" required rows={5} placeholder="Tell us how we can help you…"
-                    value={form.message} onChange={e => setForm({ ...form, message: e.target.value })}
-                    className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors resize-none"
+                  <textarea 
+                    id="message" 
+                    required 
+                    rows={5} 
+                    placeholder="Tell us how we can help you…"
+                    value={form.message} 
+                    onChange={e => setForm({ ...form, message: e.target.value })}
+                    disabled={loading}
+                    className="w-full px-4 py-3 rounded-lg border text-sm outline-none transition-colors resize-none disabled:opacity-50"
                     style={inputStyle}
                     onFocus={e => (e.currentTarget.style.borderColor = GOLD)}
                     onBlur={e => (e.currentTarget.style.borderColor = BORDER)}
@@ -138,10 +202,11 @@ export function Contact() {
                 </div>
                 <button
                   type="submit"
-                  className="w-full py-3 rounded-lg text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
+                  disabled={loading}
+                  className="w-full py-3 rounded-lg text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed"
                   style={{ background: GOLD_GRAD, fontFamily: "var(--font-display)", boxShadow: `0 4px 20px ${GOLD}35` }}
                 >
-                  Send Message
+                  {loading ? 'Sending...' : 'Send Message'}
                 </button>
               </form>
             )}
