@@ -1,5 +1,6 @@
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, BORDER } from "@/constants/colors";
+import KGCCImage from "@/assets/images/KGCC.png";
 
 export function Hero() {
   return (
@@ -59,7 +60,7 @@ export function Hero() {
           <div className="relative hidden lg:block">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl" style={{ aspectRatio: "4/3" }}>
               <img
-                src="/src/assets/images/KGCC.png"
+                src={KGCCImage}
                 alt="Klassic Group of Companies — professional team"
                 className="w-full h-full object-cover"
                 loading="eager"
