@@ -1,0 +1,10 @@
+{
+  "description": "Connect and automate data across multiple platforms with seamless integrations designed for businesses seeking efficient workflow management.",
+  "robots": {
+    "index": false
+  },
+  "accessibility": {
+    "addBypassLinks": false,
+    "ignoreReducedMotion": false
+  }
+}

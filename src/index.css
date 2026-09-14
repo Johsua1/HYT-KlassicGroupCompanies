@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600&display=swap');
+@import 'tailwindcss';
+
+@theme {
+  /* Gold — from the KLASSIC wordmark and globe */
+  --color-gold:        #C9901A;
+  --color-gold-dark:   #A67C15;
+  --color-gold-light:  #E0B030;
+  --color-gold-tint:   #FDF3DC;
+
+  /* Green — from the laurel branches */
+  --color-green:       #2D6A4F;
+  --color-green-light: #3D8A65;
+  --color-green-tint:  #E8F4EE;
+
+  /* Neutrals */
+  --color-dark:        #1C1C1E;
+  --color-charcoal:    #374151;
+  --color-slate:       #6B7280;
+  --color-border:      #E5E7EB;
+  --color-surface:     #F9FAFB;
+
+  --font-display: 'Poppins', sans-serif;
+  --font-body:    'Inter', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+html, body, #root { height: 100%; }
+
+body {
+  font-family: var(--font-body);
+  color: var(--color-dark);
+  background: #ffffff;
+}
+
+h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
