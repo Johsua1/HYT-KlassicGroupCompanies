@@ -1,4 +1,5 @@
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, GREEN, GREEN_TINT, DARK, SLATE, MUTED, BORDER, SURFACE } from "@/constants/colors";
+import KGCTeamImage from "@/assets/images/KGC.jpg";
 
 export function About() {
   const values = [
@@ -17,7 +18,7 @@ export function About() {
           <div className="relative">
             <div className="overflow-hidden rounded-2xl shadow-xl" style={{ aspectRatio: "4/3" }}>
               <img
-                src="/src/assets/images/KGC.jpg"
+                src={KGCTeamImage}
                 alt="Klassic Group team collaboration"
                 className="w-full h-full object-cover"
                 loading="lazy"
