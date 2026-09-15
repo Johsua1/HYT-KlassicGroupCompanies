@@ -32,7 +32,7 @@ export const ExpandingCards = React.forwardRef<
   ExpandingCardsProps
 >(({ className, items, defaultActiveIndex = 0, onCardClick, showVerticalPattern = false, ...props }, ref) => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(
-    defaultActiveIndex,
+    null,
   );
   
   const [isDesktop, setIsDesktop] = React.useState(false);
@@ -48,7 +48,16 @@ export const ExpandingCards = React.forwardRef<
   }, []);
   
   const gridStyle = React.useMemo(() => {
-    if (activeIndex === null) return {};
+    if (activeIndex === null) {
+      // All cards equal size when nothing is hovered
+      if (isDesktop) {
+        const columns = items.map(() => "1fr").join(" ");
+        return { gridTemplateColumns: columns };
+      } else {
+        const rows = items.map(() => "1fr").join(" ");
+        return { gridTemplateRows: rows };
+      }
+    }
     
     if (isDesktop) {
       const columns = items
@@ -113,6 +122,7 @@ export const ExpandingCards = React.forwardRef<
             borderColor: activeIndex === index ? "#C9901A" : "#E5E7EB"
           }}
           onMouseEnter={() => handleInteraction(index)}
+          onMouseLeave={() => setActiveIndex(null)}
           onFocus={() => handleInteraction(index)}
           onClick={(e) => {
             handleInteraction(index);

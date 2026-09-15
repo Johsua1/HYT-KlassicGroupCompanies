@@ -134,8 +134,7 @@ export function CompaniesExpanding() {
           <>
             <div className="flex justify-center">
               <ExpandingCards 
-                items={cardItems} 
-                defaultActiveIndex={0}
+                items={cardItems}
                 onCardClick={handleCardClick}
                 showVerticalPattern={selectedCategory === "all"}
               />
