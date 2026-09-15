@@ -1,84 +1,175 @@
-import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, GREEN, GREEN_TINT, DARK, SLATE, MUTED, BORDER, SURFACE } from "@/constants/colors";
+import { Button } from "@/components/ui/button";
+import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, MUTED, BORDER } from "@/constants/colors";
 import KGCTeamImage from "@/assets/images/KGC.jpg";
+import KGCCLogo from "@/assets/images/KGCC.png";
+import BrainsLogo from "@/assets/images/Brains.png";
+import KlassicSolutionsLogo from "@/assets/images/KlassicSolutions.png";
+import KlassicMarketingLogo from "@/assets/images/KlassicMarketing.png";
+import WDCLogo from "@/assets/images/WDC.png";
+import WestWoodLawLogo from "@/assets/images/WestWoodLawFirm.png";
 
 export function About() {
-  const values = [
-    { title: "Innovation",    desc: "We embrace change and leverage technology to craft forward-thinking solutions.", icon: "💡" },
-    { title: "Integrity",     desc: "We conduct business with the highest ethical standards and transparency.",       icon: "🤝" },
-    { title: "Excellence",    desc: "We commit to delivering quality in everything we do, without compromise.",       icon: "⭐" },
-    { title: "Collaboration", desc: "We believe in the power of teamwork and partnerships to achieve greater impact.",icon: "🔗" },
-    { title: "Service",       desc: "We exist to serve our clients, our people, and our communities with purpose.",   icon: "🌟" },
+  const companies = [
+    { src: BrainsLogo, alt: "Brains Infinite Innovations" },
+    { src: KlassicSolutionsLogo, alt: "Klassic Solutions" },
+    { src: KlassicMarketingLogo, alt: "Klassic Marketing" },
+    { src: WDCLogo, alt: "Westwood Development Corporation" },
+    { src: WestWoodLawLogo, alt: "Westwood Law Firm" },
+  ];
+
+  const achievements = [
+    { label: "Companies Under Group", value: "10+" },
+    { label: "Years of Excellence", value: "5+" },
+    { label: "Industries Served", value: "8+" },
+    { label: "Client Satisfaction", value: "99%" },
   ];
 
   return (
-    <section id="about" className="py-24" style={{ background: SURFACE }}>
+    <section id="about" className="py-32">
       <div className="max-w-7xl mx-auto px-6 lg:px-8">
-        <div className="grid lg:grid-cols-2 gap-16 items-center mb-20">
-          {/* Image */}
-          <div className="relative">
-            <div className="overflow-hidden rounded-2xl shadow-xl" style={{ aspectRatio: "4/3" }}>
+        {/* Header */}
+        <div className="mb-14 grid gap-5 text-center md:grid-cols-2 md:text-left">
+          <h1 className="text-5xl font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+            About Us
+          </h1>
+          <p style={{ color: SLATE }} className="text-lg">
+            Klassic Group of Companies is a diversified organization dedicated to creating innovative solutions that empower businesses to thrive across multiple industries in the Philippines.
+          </p>
+        </div>
+
+        {/* Image Grid */}
+        <div className="grid gap-7 lg:grid-cols-3">
+          <img
+            src={KGCTeamImage}
+            alt="Klassic Group of Companies Team"
+            className="size-full max-h-[620px] rounded-xl object-cover lg:col-span-2 shadow-xl"
+          />
+          <div className="flex flex-col gap-7 md:flex-row lg:flex-col">
+            {/* Breakout Card */}
+            <div 
+              className="flex flex-col justify-between gap-6 rounded-xl p-7 md:w-1/2 lg:w-auto shadow-lg"
+              style={{ background: GOLD_TINT }}
+            >
               <img
-                src={KGCTeamImage}
-                alt="Klassic Group team collaboration"
-                className="w-full h-full object-cover"
-                loading="lazy"
+                src={KGCCLogo}
+                alt="Klassic Group Capital Corporation"
+                className="mr-auto h-16 object-contain"
+              />
+              <div>
+                <p className="mb-2 text-lg font-bold" style={{ color: DARK }}>
+                  Building Businesses, Creating Opportunities
+                </p>
+                <p style={{ color: SLATE }}>
+                  A multi-industry group contributing to national progress through technology, services, and community development.
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                className="mr-auto font-semibold"
+                style={{ 
+                  borderColor: GOLD,
+                  color: GOLD_DARK
+                }}
+                asChild
+              >
+                <a href="#companies">Explore Our Companies</a>
+              </Button>
+            </div>
+
+            {/* Secondary Image - use one of your company logos or another asset */}
+            <div 
+              className="grow basis-0 rounded-xl object-cover md:w-1/2 lg:min-h-0 lg:w-auto shadow-lg flex items-center justify-center p-8"
+              style={{ background: "#FAFAFA" }}
+            >
+              <img
+                src={KGCCLogo}
+                alt="Klassic Group Capital Corporation"
+                className="max-w-full max-h-full object-contain"
               />
             </div>
-            <div className="absolute -bottom-4 -right-4 w-32 h-32 rounded-2xl -z-10" style={{ background: GOLD_GRAD, opacity: 0.18 }} />
-            <div className="absolute -top-4 -left-4 w-20 h-20 rounded-xl -z-10" style={{ background: GREEN_TINT, border: `2px solid ${GREEN}30` }} />
           </div>
+        </div>
 
-          {/* Text */}
-          <div className="space-y-6">
-            <div
-              className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide"
-              style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}
+        {/* Mission & Vision Section */}
+        <div className="py-20">
+          <div className="grid sm:grid-cols-2 gap-6">
+            <div 
+              className="p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200" 
+              style={{ borderColor: BORDER, borderLeft: `4px solid ${GOLD}` }}
             >
-              Who We Are
+              <div className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
+                Our Mission
+              </div>
+              <p className="text-base leading-relaxed" style={{ color: SLATE }}>
+                To build sustainable businesses and create meaningful opportunities that improve lives and contribute to the nation's development.
+              </p>
             </div>
-            <h2 className="text-3xl lg:text-4xl font-bold leading-tight" style={{ color: DARK }}>
-              A Group Built on Purpose and Passion
+            <div 
+              className="p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200" 
+              style={{ borderColor: BORDER, borderLeft: `4px solid ${GOLD}` }}
+            >
+              <div className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
+                Our Vision
+              </div>
+              <p className="text-base leading-relaxed" style={{ color: SLATE }}>
+                To be the leading diversified group of companies recognized for innovation, excellence, and lasting positive impact on Philippine society.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Companies Section */}
+        <div className="py-16">
+          <p className="text-center text-lg font-semibold" style={{ color: DARK }}>
+            Our Portfolio of Companies
+          </p>
+          <div className="mt-8 flex flex-wrap justify-center gap-8">
+            {companies.map((company, idx) => (
+              <div className="flex items-center gap-3" key={company.src + idx}>
+                <img
+                  src={company.src}
+                  alt={company.alt}
+                  className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity"
+                />
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Achievements Section */}
+        <div 
+          className="relative overflow-hidden rounded-xl p-10 md:p-16 shadow-xl"
+          style={{ background: GOLD_TINT }}
+        >
+          <div className="flex flex-col gap-4 text-center md:text-left">
+            <h2 className="text-4xl font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+              Our Achievements in Numbers
             </h2>
-            <p className="leading-relaxed" style={{ color: SLATE }}>
-              Klassic Group of Companies is a diversified organization with subsidiaries operating across technology, business services, marketing, construction, professional services, and community development.
+            <p className="max-w-screen-sm" style={{ color: SLATE }}>
+              Providing businesses with effective tools to improve workflows, boost efficiency, and encourage growth across the Philippines.
             </p>
-            <p className="leading-relaxed" style={{ color: SLATE }}>
-              Founded with a clear mission to contribute to national progress, we have grown into a multi-industry group that creates opportunities for professionals, businesses, and communities across the Philippines.
-            </p>
-            <div className="grid sm:grid-cols-2 gap-4 pt-2">
-              <div className="p-5 bg-white rounded-xl border" style={{ borderColor: BORDER, borderLeft: `3px solid ${GOLD}` }}>
-                <div className="text-sm font-semibold mb-2" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>Our Mission</div>
-                <p className="text-sm leading-relaxed" style={{ color: SLATE }}>
-                  To build sustainable businesses and create meaningful opportunities that improve lives and contribute to the nation's development.
-                </p>
-              </div>
-              <div className="p-5 bg-white rounded-xl border" style={{ borderColor: BORDER, borderLeft: `3px solid ${GREEN}` }}>
-                <div className="text-sm font-semibold mb-2" style={{ color: GREEN, fontFamily: "var(--font-display)" }}>Our Vision</div>
-                <p className="text-sm leading-relaxed" style={{ color: SLATE }}>
-                  To be the leading diversified group of companies recognized for innovation, excellence, and lasting positive impact on Philippine society.
-                </p>
-              </div>
-            </div>
           </div>
-        </div>
-
-        {/* Core values */}
-        <div className="text-center mb-10">
-          <h3 className="text-2xl font-bold" style={{ color: DARK }}>Our Core Values</h3>
-          <div className="w-12 h-0.5 mx-auto mt-3 rounded" style={{ background: GOLD_GRAD }} />
-        </div>
-        <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-4">
-          {values.map((v) => (
-            <div
-              key={v.title}
-              className="p-6 bg-white rounded-xl border text-center space-y-3 hover:-translate-y-1 transition-transform duration-200"
-              style={{ borderColor: BORDER }}
-            >
-              <div className="text-3xl">{v.icon}</div>
-              <div className="font-semibold text-sm" style={{ color: DARK, fontFamily: "var(--font-display)" }}>{v.title}</div>
-              <p className="text-xs leading-relaxed" style={{ color: MUTED }}>{v.desc}</p>
-            </div>
-          ))}
+          <div className="mt-10 flex flex-wrap justify-between gap-10 text-center">
+            {achievements.map((item, idx) => (
+              <div className="flex flex-col gap-4" key={item.label + idx}>
+                <p className="font-medium" style={{ color: SLATE }}>{item.label}</p>
+                <span 
+                  className="text-4xl font-bold md:text-5xl"
+                  style={{ 
+                    color: DARK,
+                    fontFamily: "var(--font-display)"
+                  }}
+                >
+                  {item.value}
+                </span>
+              </div>
+            ))}
+          </div>
+          
+          {/* Grid Pattern Overlay */}
+          <div 
+            className="pointer-events-none absolute -top-1 right-1 z-10 hidden h-full w-full bg-[linear-gradient(to_right,hsl(var(--muted-foreground))_1px,transparent_1px),linear-gradient(to_bottom,hsl(var(--muted-foreground))_1px,transparent_1px)] bg-[size:80px_80px] opacity-15 [mask-image:linear-gradient(to_bottom_right,#000,transparent,transparent)] md:block"
+          />
         </div>
       </div>
     </section>
