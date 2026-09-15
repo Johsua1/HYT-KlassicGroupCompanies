@@ -1,5 +1,5 @@
 import { Navbar, Footer } from "@/components/layout";
-import { Hero, Stats, About, Companies, Careers, News, Contact } from "@/components/sections";
+import { Hero, Stats, About, CompaniesExpanding, Careers, News, Contact } from "@/components/sections";
 
 export default function App() {
   return (
@@ -9,7 +9,7 @@ export default function App() {
         <Hero />
         <Stats />
         <About />
-        <Companies />
+        <CompaniesExpanding />
         <Careers />
         <News />
         <Contact />

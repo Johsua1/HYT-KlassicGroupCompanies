@@ -40,3 +40,12 @@ h1, h2, h3, h4, h5, h6 { font-family: var(--font-display); }
 ::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb { background: #D1D5DB; border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: #9CA3AF; }
+
+/* Additional Tailwind utility classes for shadcn components */
+.bg-card {
+  background-color: var(--color-card);
+}
+
+.text-card-foreground {
+  color: var(--color-card-foreground);
+}

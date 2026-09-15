@@ -1,6 +1,6 @@
 import { FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from "@/components/ui/Icons";
 import { GOLD_GRAD, GOLD, GOLD_LIGHT, MUTED } from "@/constants/colors";
-import logoImg from "@/assets/images/image.png";
+import logoImg from "@/assets/images/KlassicGroupCompanies.png";
 
 export function Footer() {
   const links: Record<string, string[]> = {
@@ -18,8 +18,8 @@ export function Footer() {
         <div className="grid sm:grid-cols-2 lg:grid-cols-5 gap-10">
           {/* Brand */}
           <div className="lg:col-span-2 space-y-5">
-            <div className="inline-flex items-center rounded-xl px-3 py-2" style={{ background: "#fff" }}>
-              <img src={logoImg} alt="Klassic Group of Companies" className="h-10 w-auto object-contain" />
+            <div className="inline-flex items-center">
+              <img src={logoImg} alt="Klassic Group of Companies" className="h-16 w-auto object-contain" />
             </div>
             <p className="text-sm leading-relaxed" style={{ color: MUTED }}>
               Building businesses, creating opportunities, and contributing to a better future for every Filipino.

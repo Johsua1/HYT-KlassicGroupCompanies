@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { MenuIcon, CloseIcon } from "@/components/ui/Icons";
 import { GOLD_GRAD, GOLD_DARK, GOLD, CHARCOAL, BORDER, SURFACE } from "@/constants/colors";
-import logoImg from "@/assets/images/image.png";
+import logoImg from "@/assets/images/KlassicGroupCompanies.png";
 
 export function Navbar() {
   const [open, setOpen] = useState(false);
