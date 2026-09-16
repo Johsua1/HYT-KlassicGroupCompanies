@@ -31,6 +31,21 @@ const companyIcons: Record<string, React.ReactNode> = {
   "finest-fit": <Shirt size={28} />,
 };
 
+// Map company IDs to their brand colors for dynamic glow effects
+const companyBrandColors: Record<string, string> = {
+  "brains-infinite": "#E91E63",        // Pink/Magenta (from their logo)
+  "klassic-solutions": "#C9901A",      // Gold (Klassic brand color)
+  "klassic-marketing": "#C9901A",      // Gold (Klassic brand color)
+  "westwood-development": "#1976D2",   // Blue
+  "westwood-law": "#1976D2",           // Blue (professional legal color)
+  "connector": "#FF6B35",              // Orange/Red
+  "green-oasis": "#4CAF50",            // Green (nature/plants)
+  "luxurious-cleaning": "#FFD700",     // Gold/Yellow (luxury)
+  "hyt-foundation": "#C9901A",         // Gold
+  "finest-fit": "#000000",             // Black (fashion/elegant)
+  "kgcc": "#C9901A",                   // Gold (Klassic brand)
+};
+
 export function CompaniesExpanding() {
   const [selectedCategory, setSelectedCategory] = useState("all");
   const [selectedCompany, setSelectedCompany] = useState<typeof companies[0] | null>(null);
@@ -40,7 +55,7 @@ export function CompaniesExpanding() {
     ? companies 
     : companies.filter(company => company.categorySlug === selectedCategory);
 
-  // Convert company data to CardItem format with social media links
+  // Convert company data to CardItem format with social media links and brand colors
   const cardItems: CardItem[] = filteredCompanies.map((company) => ({
     id: company.id,
     title: company.name,
@@ -56,6 +71,7 @@ export function CompaniesExpanding() {
     fullDescription: company.description,
     services: company.services,
     category: company.category,
+    brandColor: companyBrandColors[company.id] || GOLD, // Default to gold if not specified
   }));
 
   const handleCardClick = (item: CardItem) => {
@@ -129,16 +145,64 @@ export function CompaniesExpanding() {
           })}
         </div>
 
-        {/* Expanding Cards */}
+        {/* Companies Display - Desktop: Expanding Cards, Mobile: Simple Card List */}
         {filteredCompanies.length > 0 ? (
           <>
-            <div className="flex justify-center">
+            {/* Desktop View - Expanding Cards */}
+            <div className="hidden md:flex justify-center">
               <ExpandingCards 
-                items={cardItems} 
-                defaultActiveIndex={0}
+                items={cardItems}
                 onCardClick={handleCardClick}
                 showVerticalPattern={selectedCategory === "all"}
+                showCategoryText={selectedCategory === "all"}
               />
+            </div>
+
+            {/* Mobile View - Simple Card List */}
+            <div className="md:hidden space-y-4">
+              {filteredCompanies.map((company) => (
+                <div
+                  key={company.id}
+                  className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
+                  style={{ borderColor: BORDER }}
+                  onClick={() => setSelectedCompany(company)}
+                >
+                  {/* Category Badge */}
+                  <div className="px-4 pt-4 pb-2">
+                    <span 
+                      className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
+                      style={{ 
+                        background: GOLD_TINT,
+                        color: GOLD_DARK
+                      }}
+                    >
+                      {company.category}
+                    </span>
+                  </div>
+
+                  {/* Company Logo */}
+                  <div className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8">
+                    <img
+                      src={company.image}
+                      alt={company.name}
+                      className="h-20 w-auto object-contain"
+                    />
+                  </div>
+
+                  {/* Company Info */}
+                  <div className="px-4 pb-4">
+                    <h3 
+                      className="text-lg font-bold mb-1"
+                      style={{ color: DARK, fontFamily: "var(--font-display)" }}
+                    >
+                      {company.name}
+                    </h3>
+                    <p className="text-sm" style={{ color: SLATE }}>
+                      {company.tagline}
+                    </p>
+                  </div>
+                </div>
+              ))}
             </div>
 
             {/* Call to Action - Improved messaging */}
@@ -149,8 +213,11 @@ export function CompaniesExpanding() {
                   : `${filteredCompanies.length} ${filteredCompanies.length === 1 ? 'company' : 'companies'} in ${categories.find(c => c.slug === selectedCategory)?.label}`
                 }
               </p>
-              <p className="text-xs" style={{ color: SLATE }}>
+              <p className="text-xs hidden md:block" style={{ color: SLATE }}>
                 Hover to preview • Click any card to view full details and social links
+              </p>
+              <p className="text-xs md:hidden" style={{ color: SLATE }}>
+                Tap any card to view full details and social links
               </p>
             </div>
           </>

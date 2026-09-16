@@ -1,13 +1,41 @@
-import { FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon } from "@/components/ui/Icons";
+import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/ui/Icons";
 import { GOLD_GRAD, GOLD, GOLD_LIGHT, MUTED } from "@/constants/colors";
 import logoImg from "@/assets/images/KlassicGroupCompanies.png";
 
 export function Footer() {
-  const links: Record<string, string[]> = {
-    "Company":         ["About Us", "Our Companies", "Careers", "News & Updates"],
-    "Our Services":    ["Company Directory", "Business Services", "Technology", "Professional Services"],
-    "Support":         ["Contact Us", "FAQs", "Privacy Policy", "Terms & Conditions"],
+  const links: Record<string, Array<{ label: string; href: string }>> = {
+    "Company": [
+      { label: "About Us", href: "#about" },
+      { label: "Our Companies", href: "#companies" },
+      { label: "Careers", href: "#contact" },
+      { label: "News & Updates", href: "#news" },
+    ],
+    "Our Services": [
+      { label: "Company Directory", href: "#companies" },
+      { label: "Business Services", href: "#companies" },
+      { label: "Technology", href: "#companies" },
+      { label: "Professional Services", href: "#companies" },
+    ],
+    "Support": [
+      { label: "Contact Us", href: "#contact" },
+      { label: "FAQs", href: "#contact" },
+      { label: "Privacy Policy", href: "#" },
+      { label: "Terms & Conditions", href: "#" },
+    ],
   };
+
+  const socialLinks = [
+    { 
+      icon: <FacebookIcon size={17} />, 
+      label: "Facebook", 
+      href: "https://www.facebook.com/profile.php?id=61554025331986" 
+    },
+    { 
+      icon: <YoutubeIcon size={17} />, 
+      label: "YouTube", 
+      href: "https://www.youtube.com/watch?v=8BFhdINS97w" 
+    },
+  ];
 
   return (
     <footer style={{ background: "#0D1117" }} className="text-white">
@@ -25,15 +53,12 @@ export function Footer() {
               Building businesses, creating opportunities, and contributing to a better future for every Filipino.
             </p>
             <div className="flex items-center gap-3">
-              {[
-                { icon: <FacebookIcon size={17} />, label: "Facebook" },
-                { icon: <InstagramIcon size={17} />, label: "Instagram" },
-                { icon: <YoutubeIcon size={17} />, label: "YouTube" },
-                { icon: <LinkedinIcon size={17} />, label: "LinkedIn" },
-              ].map(({ icon, label }) => (
+              {socialLinks.map(({ icon, label, href }) => (
                 <a
                   key={label}
-                  href="#"
+                  href={href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="w-8 h-8 rounded-lg flex items-center justify-center transition-all"
                   style={{ background: "#1F2937", color: MUTED }}
                   aria-label={label}
@@ -52,15 +77,15 @@ export function Footer() {
               <h4 className="text-xs font-semibold uppercase tracking-wider" style={{ color: GOLD_LIGHT, fontFamily: "var(--font-display)" }}>{title}</h4>
               <ul className="space-y-2.5">
                 {items.map(item => (
-                  <li key={item}>
+                  <li key={item.label}>
                     <a
-                      href="#"
+                      href={item.href}
                       className="text-sm transition-colors"
                       style={{ color: MUTED }}
                       onMouseEnter={e => (e.currentTarget.style.color = GOLD_LIGHT)}
                       onMouseLeave={e => (e.currentTarget.style.color = MUTED)}
                     >
-                      {item}
+                      {item.label}
                     </a>
                   </li>
                 ))}

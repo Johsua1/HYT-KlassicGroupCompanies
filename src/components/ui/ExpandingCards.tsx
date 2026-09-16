@@ -18,6 +18,7 @@ export interface CardItem {
   fullDescription?: string;
   services?: string[];
   category?: string;
+  brandColor?: string;
 }
 
 interface ExpandingCardsProps extends React.HTMLAttributes<HTMLUListElement> {
@@ -25,12 +26,13 @@ interface ExpandingCardsProps extends React.HTMLAttributes<HTMLUListElement> {
   defaultActiveIndex?: number;
   onCardClick?: (item: CardItem) => void;
   showVerticalPattern?: boolean;
+  showCategoryText?: boolean;
 }
 
 export const ExpandingCards = React.forwardRef<
   HTMLUListElement,
   ExpandingCardsProps
->(({ className, items, defaultActiveIndex = 0, onCardClick, showVerticalPattern = false, ...props }, ref) => {
+>(({ className, items, defaultActiveIndex = 0, onCardClick, showVerticalPattern = false, showCategoryText = true, ...props }, ref) => {
   const [activeIndex, setActiveIndex] = React.useState<number | null>(
     null,
   );
@@ -112,14 +114,18 @@ export const ExpandingCards = React.forwardRef<
         <li
           key={item.id}
           className={cn(
-            "group relative cursor-pointer overflow-hidden rounded-xl border-2 bg-card text-card-foreground shadow-lg hover:shadow-xl",
+            "group relative cursor-pointer overflow-hidden rounded-xl border-2 bg-card text-card-foreground shadow-lg hover:shadow-2xl",
             "md:min-w-[80px]",
             "min-h-0 min-w-0",
             "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-            "transition-shadow duration-300"
+            "transition-all duration-500 ease-out",
+            "hover:-translate-y-1"
           )}
           style={{
-            borderColor: activeIndex === index ? "#C9901A" : "#E5E7EB"
+            borderColor: activeIndex === index ? (item.brandColor || "#C9901A") : "#E5E7EB",
+            boxShadow: activeIndex === index 
+              ? `0 20px 50px ${item.brandColor || '#C9901A'}40, 0 0 0 1px ${item.brandColor || '#C9901A'}20`
+              : undefined
           }}
           onMouseEnter={() => handleInteraction(index)}
           onMouseLeave={() => setActiveIndex(null)}
@@ -141,7 +147,7 @@ export const ExpandingCards = React.forwardRef<
             }}
           />
           
-          {/* Company Logo with better presentation */}
+          {/* Company Logo with better presentation and glow effect on hover */}
           <div 
             className="absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out group-data-[active=true]:p-8 p-6" 
             style={{ background: "#FAFAFA" }}
@@ -153,6 +159,15 @@ export const ExpandingCards = React.forwardRef<
               </div>
             )}
             
+            {/* Glow effect behind logo on hover - uses company brand color */}
+            <div 
+              className="absolute inset-0 flex items-center justify-center opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-500 ease-out pointer-events-none"
+              style={{
+                filter: "blur(40px)",
+                background: `radial-gradient(circle, ${item.brandColor || '#C9901A'}40 0%, transparent 70%)`
+              }}
+            />
+            
             <img
               src={item.imgSrc}
               alt={item.title}
@@ -162,44 +177,51 @@ export const ExpandingCards = React.forwardRef<
                 handleImageLoad(item.id);
               }}
               className={cn(
-                "max-w-full max-h-full object-contain transition-all duration-300 ease-out",
-                "group-data-[active=true]:scale-95 scale-100",
-                "drop-shadow-sm",
+                "max-w-full max-h-full object-contain transition-all duration-500 ease-out relative z-10",
+                "group-data-[active=true]:scale-105 scale-100",
+                "group-data-[active=true]:brightness-110",
                 !imageLoadStates[item.id] && "opacity-0"
               )}
+              style={{
+                filter: activeIndex === index 
+                  ? `drop-shadow(0 0 20px ${item.brandColor || '#C9901A'}99) drop-shadow(0 0 40px ${item.brandColor || '#C9901A'}66)`
+                  : "drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
+              }}
               loading="lazy"
             />
           </div>
           
-          {/* Dark overlay when expanded - improved gradient */}
+          {/* Subtle dark overlay when expanded - makes logo pop */}
           <div 
-            className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/70 to-black/40 opacity-0 transition-opacity duration-300 group-data-[active=true]:opacity-100 pointer-events-none"
+            className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-data-[active=true]:opacity-100 pointer-events-none"
           />
           
           <article
             className="absolute inset-0 flex flex-col justify-end p-4 md:p-6"
           >
-            {/* Category badge - fixed at top */}
-            <div className="absolute top-4 left-4 opacity-100 transition-all duration-300 ease-out group-data-[active=true]:opacity-0">
-              <span 
-                className="text-[10px] md:text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md inline-block"
-                style={{ 
-                  background: "rgba(201,144,26,0.15)",
-                  color: "#A67C15",
-                  backdropFilter: "blur(4px)"
-                }}
-              >
-                {item.category?.split(' ')[0] || 'Company'}
-              </span>
-            </div>
+            {/* Category name - vertical when "All" filter, hidden when specific category */}
+            {showCategoryText && (
+              <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-100 transition-all duration-300 ease-out group-data-[active=true]:opacity-0">
+                <p 
+                  className="text-xs font-bold uppercase tracking-wider"
+                  style={{ 
+                    writingMode: "vertical-rl",
+                    textOrientation: "mixed",
+                    color: "#6B7280",
+                    letterSpacing: "0.1em"
+                  }}
+                >
+                  {item.category || 'Company'}
+                </p>
+              </div>
+            )}
 
-            {/* Company name - absolute positioned at fixed distance from bottom */}
-            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 opacity-100 transition-all duration-300 ease-out group-data-[active=true]:opacity-0">
+            {/* Company name - only visible on hover */}
+            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-10">
               <h3 
                 className="text-sm md:text-base font-bold leading-tight line-clamp-2"
                 style={{ 
                   color: "#1C1C1E",
-                  textShadow: "0 2px 8px rgba(255,255,255,0.9), 0 0 16px rgba(255,255,255,0.7)",
                   fontFamily: "var(--font-display)"
                 }}
               >
@@ -207,91 +229,78 @@ export const ExpandingCards = React.forwardRef<
               </h3>
             </div>
 
-            {/* Expanded content */}
-            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 opacity-0 transition-all duration-300 delay-75 ease-out group-data-[active=true]:opacity-100 space-y-3">
-                {/* Icon */}
-                <div className="text-white/90">
-                  {item.icon}
-                </div>
-                
-                {/* Company Name in expanded state */}
-                <h3 className="text-xl md:text-2xl font-bold text-white leading-tight">
-                  {item.title}
-                </h3>
-                
-                {/* Tagline */}
-                <p className="text-sm text-white/90 leading-relaxed max-w-xs">
-                  {item.description}
-                </p>
-                
-                {/* Social Media Links */}
-                {item.socialLinks && (
-                  <div className="flex items-center gap-2 pt-2">
-                    {item.socialLinks.facebook && (
-                      <a
-                        href={item.socialLinks.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center text-white transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={`${item.title} Facebook`}
-                      >
-                        <FacebookIcon size={16} />
-                      </a>
-                    )}
-                    {item.socialLinks.instagram && (
-                      <a
-                        href={item.socialLinks.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center text-white transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={`${item.title} Instagram`}
-                      >
-                        <InstagramIcon size={16} />
-                      </a>
-                    )}
-                    {item.socialLinks.youtube && item.socialLinks.youtube !== "#" && (
-                      <a
-                        href={item.socialLinks.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center text-white transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={`${item.title} YouTube`}
-                      >
-                        <YoutubeIcon size={16} />
-                      </a>
-                    )}
-                    {item.linkHref && item.linkHref !== "#" && (
-                      <a
-                        href={item.linkHref}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="w-9 h-9 rounded-lg bg-white/20 backdrop-blur-sm hover:bg-white/30 flex items-center justify-center text-white transition-all hover:scale-110 focus:outline-none focus:ring-2 focus:ring-white/50"
-                        onClick={(e) => e.stopPropagation()}
-                        aria-label={`Visit ${item.title} website`}
-                      >
-                        <ExternalLink size={16} />
-                      </a>
-                    )}
-                  </div>
+            {/* Social Media Links - show on hover at top-left */}
+            <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-10">
+              <div className="flex items-center gap-2">
+                {item.socialLinks?.facebook && (
+                  <a
+                    href={item.socialLinks.facebook}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`${item.title} Facebook`}
+                  >
+                    <FacebookIcon size={14} />
+                  </a>
+                )}
+                {item.socialLinks?.instagram && (
+                  <a
+                    href={item.socialLinks.instagram}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`${item.title} Instagram`}
+                  >
+                    <InstagramIcon size={14} />
+                  </a>
+                )}
+                {item.socialLinks?.youtube && item.socialLinks.youtube !== "#" && (
+                  <a
+                    href={item.socialLinks.youtube}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`${item.title} YouTube`}
+                  >
+                    <YoutubeIcon size={14} />
+                  </a>
+                )}
+                {item.linkHref && item.linkHref !== "#" && (
+                  <a
+                    href={item.linkHref}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    onClick={(e) => e.stopPropagation()}
+                    aria-label={`Visit ${item.title} website`}
+                  >
+                    <ExternalLink size={14} />
+                  </a>
                 )}
               </div>
+            </div>
+
+            {/* Expanded content - HIDDEN to keep focus on logo */}
+            {/* When hovered, only the logo is visible and bright */}
           </article>
 
-          {/* Click indicator */}
+          {/* Click for details indicator */}
           <div className="absolute top-4 right-4 opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-300 pointer-events-none">
             <div 
-              className="text-xs font-semibold px-2 py-1 rounded-md backdrop-blur-sm"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md backdrop-blur-sm"
               style={{ 
-                background: "rgba(201,144,26,0.9)",
-                color: "white"
+                background: "rgba(201,144,26,0.95)",
+                color: "white",
+                boxShadow: "0 2px 8px rgba(201,144,26,0.3)"
               }}
             >
               Click for details
             </div>
           </div>
+          {/* Click indicator removed - keeping focus on logo visibility */}
         </li>
       ))}
     </ul>
