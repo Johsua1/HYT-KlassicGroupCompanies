@@ -10,6 +10,23 @@ interface CompanyModalProps {
 
 export function CompanyModal({ company, onClose }: CompanyModalProps) {
   const ref = useRef<HTMLDivElement>(null);
+  
+  // Brand colors mapping - hard-coded here to ensure it works
+  const companyBrandColors: Record<string, string> = {
+    "brains-infinite": "#FF1493",
+    "klassic-solutions": "#FFB84D",
+    "klassic-marketing": "#FFB84D",
+    "westwood-development": "#4A9EFF",
+    "westwood-law": "#6BB6FF",
+    "connector": "#FF6347",
+    "green-oasis": "#4ADE80",
+    "luxurious-cleaning": "#FFD93D",
+    "hyt-foundation": "#FFB84D",
+    "finest-fit": "#FFFFFF",
+    "kgcc": "#FFB84D",
+  };
+  
+  const brandColor = companyBrandColors[company.id] || company.brandColor || GOLD;
 
   useEffect(() => {
     const handler = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
@@ -39,7 +56,7 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
           </button>
           <span
             className="absolute bottom-4 left-5 px-3 py-1 rounded-full text-xs font-semibold"
-            style={{ background: GOLD, color: "#fff", fontFamily: "var(--font-display)" }}
+            style={{ background: brandColor, color: "#fff", fontFamily: "var(--font-display)" }}
           >
             {company.category}
           </span>
@@ -48,7 +65,7 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
         <div className="p-6 lg:p-8 space-y-6">
           <div>
             <h2 className="text-2xl font-bold mb-1" style={{ color: DARK, fontFamily: "var(--font-display)" }}>{company.name}</h2>
-            <p className="text-sm italic" style={{ color: GREEN }}>{company.tagline}</p>
+            <p className="text-sm italic" style={{ color: brandColor }}>{company.tagline}</p>
           </div>
 
           <p className="leading-relaxed" style={{ color: SLATE }}>{company.description}</p>
@@ -57,7 +74,7 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
             <h4 className="text-sm font-semibold mb-3" style={{ color: DARK, fontFamily: "var(--font-display)" }}>Key Services</h4>
             <div className="flex flex-wrap gap-2">
               {company.services.map(s => (
-                <span key={s} className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
+                <span key={s} className="px-3 py-1 rounded-full text-xs font-medium" style={{ background: `${brandColor}20`, color: brandColor, fontFamily: "var(--font-display)" }}>
                   {s}
                 </span>
               ))}
@@ -67,13 +84,13 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
           <div className="flex items-center justify-between pt-4 border-t" style={{ borderColor: BORDER }}>
             <div className="flex items-center gap-3" style={{ color: MUTED }}>
               {company.facebook && (
-                <a href={company.facebook} aria-label="Facebook" onMouseEnter={e => (e.currentTarget.style.color = GOLD)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><FacebookIcon size={20} /></a>
+                <a href={company.facebook} aria-label="Facebook" onMouseEnter={e => (e.currentTarget.style.color = brandColor)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><FacebookIcon size={20} /></a>
               )}
               {company.instagram && (
-                <a href={company.instagram} aria-label="Instagram" onMouseEnter={e => (e.currentTarget.style.color = GOLD)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><InstagramIcon size={20} /></a>
+                <a href={company.instagram} aria-label="Instagram" onMouseEnter={e => (e.currentTarget.style.color = brandColor)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><InstagramIcon size={20} /></a>
               )}
               {company.youtube && (
-                <a href={company.youtube} aria-label="YouTube" onMouseEnter={e => (e.currentTarget.style.color = GOLD)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><YoutubeIcon size={20} /></a>
+                <a href={company.youtube} aria-label="YouTube" onMouseEnter={e => (e.currentTarget.style.color = brandColor)} onMouseLeave={e => (e.currentTarget.style.color = MUTED)}><YoutubeIcon size={20} /></a>
               )}
             </div>
             <a
@@ -81,7 +98,7 @@ export function CompanyModal({ company, onClose }: CompanyModalProps) {
               target="_blank"
               rel="noopener noreferrer"
               className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg text-sm font-semibold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
-              style={{ background: GOLD_GRAD, fontFamily: "var(--font-display)" }}
+              style={{ background: brandColor, fontFamily: "var(--font-display)" }}
             >
               Visit Official Website <ExternalLinkIcon />
             </a>

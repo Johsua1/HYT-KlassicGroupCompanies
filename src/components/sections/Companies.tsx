@@ -3,7 +3,22 @@ import { companies, categories } from "@/data";
 import type { Company } from "@/types";
 import { CompanyCard } from "@/components/ui/CompanyCard";
 import { CompanyModal } from "@/components/ui/CompanyModal";
-import { GOLD_TINT, GOLD_DARK, GOLD_GRAD, DARK, SLATE, MUTED } from "@/constants/colors";
+import { GOLD_TINT, GOLD_DARK, GOLD_GRAD, GOLD, DARK, SLATE, MUTED } from "@/constants/colors";
+
+// Map company IDs to their brand colors
+const companyBrandColors: Record<string, string> = {
+  "brains-infinite": "#FF1493",
+  "klassic-solutions": "#FFB84D",
+  "klassic-marketing": "#FFB84D",
+  "westwood-development": "#4A9EFF",
+  "westwood-law": "#6BB6FF",
+  "connector": "#FF6347",
+  "green-oasis": "#4ADE80",
+  "luxurious-cleaning": "#FFD93D",
+  "hyt-foundation": "#FFB84D",
+  "finest-fit": "#FFFFFF",
+  "kgcc": "#FFB84D",
+};
 
 export function Companies() {
   const [activeCategory, setActiveCategory] = useState("all");
@@ -12,6 +27,15 @@ export function Companies() {
   const filtered = activeCategory === "all"
     ? companies
     : companies.filter(c => c.categorySlug === activeCategory);
+
+  const handleSelectCompany = (company: Company) => {
+    // Add brandColor to the company object
+    const companyWithBrandColor = {
+      ...company,
+      brandColor: companyBrandColors[company.id] || GOLD
+    };
+    setSelectedCompany(companyWithBrandColor);
+  };
 
   return (
     <section id="companies" className="py-24" style={{ background: "#fff" }}>
@@ -51,7 +75,7 @@ export function Companies() {
 
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filtered.map(company => (
-            <CompanyCard key={company.id} company={company} onSelect={setSelectedCompany} />
+            <CompanyCard key={company.id} company={company} onSelect={handleSelectCompany} />
           ))}
         </div>
 

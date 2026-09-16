@@ -11,6 +11,7 @@ export interface Company {
   facebook?: string;
   instagram?: string;
   youtube?: string;
+  brandColor?: string;
 }
 
 export interface Category {

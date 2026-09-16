@@ -33,17 +33,17 @@ const companyIcons: Record<string, React.ReactNode> = {
 
 // Map company IDs to their brand colors for dynamic glow effects
 const companyBrandColors: Record<string, string> = {
-  "brains-infinite": "#E91E63",        // Pink/Magenta (from their logo)
-  "klassic-solutions": "#C9901A",      // Gold (Klassic brand color)
-  "klassic-marketing": "#C9901A",      // Gold (Klassic brand color)
-  "westwood-development": "#1976D2",   // Blue
-  "westwood-law": "#1976D2",           // Blue (professional legal color)
-  "connector": "#FF6B35",              // Orange/Red
-  "green-oasis": "#4CAF50",            // Green (nature/plants)
-  "luxurious-cleaning": "#FFD700",     // Gold/Yellow (luxury)
-  "hyt-foundation": "#C9901A",         // Gold
-  "finest-fit": "#000000",             // Black (fashion/elegant)
-  "kgcc": "#C9901A",                   // Gold (Klassic brand)
+  "brains-infinite": "#FF1493",        // Vibrant Hot Pink (matches logo magenta, excellent contrast)
+  "klassic-solutions": "#FFB84D",      // Warm Gold (brighter, more premium than original)
+  "klassic-marketing": "#FFB84D",      // Warm Gold (consistent with Klassic brand)
+  "westwood-development": "#4A9EFF",   // Bright Blue (more vibrant than original, professional)
+  "westwood-law": "#6BB6FF",           // Even Brighter Blue (better visibility for dark logo)
+  "connector": "#FF6347",              // Tomato Red-Orange (vibrant, energetic)
+  "green-oasis": "#4ADE80",            // Bright Green (nature-inspired, great visibility)
+  "luxurious-cleaning": "#FFD93D",     // Bright Gold-Yellow (luxury, stands out)
+  "hyt-foundation": "#FFB84D",         // Warm Gold (consistent with foundation branding)
+  "finest-fit": "#FFFFFF",             // Pure White (replaces black for visibility on black background)
+  "kgcc": "#FFB84D",                   // Warm Gold (Klassic brand, premium feel)
 };
 
 export function CompaniesExpanding() {
@@ -78,7 +78,12 @@ export function CompaniesExpanding() {
     // Find the full company data
     const company = companies.find(c => c.id === item.id);
     if (company) {
-      setSelectedCompany(company);
+      // Add brandColor to the company object
+      const companyWithBrandColor = {
+        ...company,
+        brandColor: companyBrandColors[company.id] || GOLD
+      };
+      setSelectedCompany(companyWithBrandColor);
     }
   };
 

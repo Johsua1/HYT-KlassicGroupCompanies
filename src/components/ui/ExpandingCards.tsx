@@ -139,32 +139,29 @@ export const ExpandingCards = React.forwardRef<
           aria-label={`View ${item.title}`}
           data-active={activeIndex === index}
         >
-          {/* Subtle gradient overlay for depth */}
+          {/* Pure Black Background */}
           <div 
-            className="absolute inset-0 opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-300"
-            style={{ 
-              background: "linear-gradient(135deg, rgba(201,144,26,0.05) 0%, rgba(201,144,26,0.15) 100%)"
-            }}
+            className="absolute inset-0 transition-all duration-300"
+            style={{ background: "#000000" }}
           />
           
-          {/* Company Logo with better presentation and glow effect on hover */}
+          {/* Company Logo - only visible on hover */}
           <div 
-            className="absolute inset-0 flex items-center justify-center transition-all duration-300 ease-out group-data-[active=true]:p-8 p-6" 
-            style={{ background: "#FAFAFA" }}
+            className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out p-8 opacity-0 group-data-[active=true]:opacity-100" 
           >
             {/* Loading skeleton */}
             {!imageLoadStates[item.id] && (
               <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-gray-400" />
+                <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
               </div>
             )}
             
             {/* Glow effect behind logo on hover - uses company brand color */}
             <div 
-              className="absolute inset-0 flex items-center justify-center opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-500 ease-out pointer-events-none"
+              className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-out pointer-events-none"
               style={{
                 filter: "blur(40px)",
-                background: `radial-gradient(circle, ${item.brandColor || '#C9901A'}40 0%, transparent 70%)`
+                background: `radial-gradient(circle, ${item.brandColor || '#C9901A'}60 0%, transparent 70%)`
               }}
             />
             
@@ -173,56 +170,35 @@ export const ExpandingCards = React.forwardRef<
               alt={item.title}
               onLoad={() => handleImageLoad(item.id)}
               onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23ddd' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23666'%3ELogo%3C/text%3E%3C/svg%3E";
+                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23333' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ELogo%3C/text%3E%3C/svg%3E";
                 handleImageLoad(item.id);
               }}
               className={cn(
                 "max-w-full max-h-full object-contain transition-all duration-500 ease-out relative z-10",
-                "group-data-[active=true]:scale-105 scale-100",
-                "group-data-[active=true]:brightness-110",
+                "scale-110 brightness-110",
                 !imageLoadStates[item.id] && "opacity-0"
               )}
               style={{
-                filter: activeIndex === index 
-                  ? `drop-shadow(0 0 20px ${item.brandColor || '#C9901A'}99) drop-shadow(0 0 40px ${item.brandColor || '#C9901A'}66)`
-                  : "drop-shadow(0 2px 4px rgba(0,0,0,0.1))"
+                filter: `drop-shadow(0 0 30px ${item.brandColor || '#C9901A'}dd) drop-shadow(0 0 60px ${item.brandColor || '#C9901A'}88)`
               }}
               loading="lazy"
             />
           </div>
           
-          {/* Subtle dark overlay when expanded - makes logo pop */}
-          <div 
-            className="absolute inset-0 bg-gradient-to-t from-black/30 via-black/10 to-transparent opacity-0 transition-opacity duration-300 group-data-[active=true]:opacity-100 pointer-events-none"
-          />
-          
           <article
             className="absolute inset-0 flex flex-col justify-end p-4 md:p-6"
           >
-            {/* Category name - vertical when "All" filter, hidden when specific category */}
-            {showCategoryText && (
-              <div className="absolute top-4 left-1/2 -translate-x-1/2 opacity-100 transition-all duration-300 ease-out group-data-[active=true]:opacity-0">
-                <p 
-                  className="text-xs font-bold uppercase tracking-wider"
-                  style={{ 
-                    writingMode: "vertical-rl",
-                    textOrientation: "mixed",
-                    color: "#6B7280",
-                    letterSpacing: "0.1em"
-                  }}
-                >
-                  {item.category || 'Company'}
-                </p>
-              </div>
-            )}
-
-            {/* Company name - only visible on hover */}
-            <div className="absolute bottom-4 left-4 right-4 md:bottom-6 md:left-6 md:right-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-10">
+            {/* Vertical Company Name - visible when NOT hovered */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out opacity-100 group-data-[active=true]:opacity-0">
               <h3 
-                className="text-sm md:text-base font-bold leading-tight line-clamp-2"
+                className="text-lg md:text-xl font-bold uppercase tracking-widest"
                 style={{ 
-                  color: "#1C1C1E",
-                  fontFamily: "var(--font-display)"
+                  writingMode: "vertical-rl",
+                  textOrientation: "mixed",
+                  color: item.brandColor || "#C9901A",
+                  letterSpacing: "0.2em",
+                  fontFamily: "var(--font-display)",
+                  textShadow: `0 0 20px ${item.brandColor || '#C9901A'}66`
                 }}
               >
                 {item.title}
@@ -230,16 +206,19 @@ export const ExpandingCards = React.forwardRef<
             </div>
 
             {/* Social Media Links - show on hover at top-left */}
-            <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-10">
+            <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-20">
               <div className="flex items-center gap-2">
                 {item.socialLinks?.facebook && (
                   <a
                     href={item.socialLinks.facebook}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`${item.title} Facebook`}
+                    style={{ 
+                      color: item.brandColor || "#C9901A"
+                    }}
                   >
                     <FacebookIcon size={14} />
                   </a>
@@ -249,9 +228,12 @@ export const ExpandingCards = React.forwardRef<
                     href={item.socialLinks.instagram}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`${item.title} Instagram`}
+                    style={{ 
+                      color: item.brandColor || "#C9901A"
+                    }}
                   >
                     <InstagramIcon size={14} />
                   </a>
@@ -261,9 +243,12 @@ export const ExpandingCards = React.forwardRef<
                     href={item.socialLinks.youtube}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`${item.title} YouTube`}
+                    style={{ 
+                      color: item.brandColor || "#C9901A"
+                    }}
                   >
                     <YoutubeIcon size={14} />
                   </a>
@@ -273,9 +258,12 @@ export const ExpandingCards = React.forwardRef<
                     href={item.linkHref}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/90 backdrop-blur-sm hover:bg-[#C9901A] flex items-center justify-center text-gray-700 hover:text-white transition-all hover:scale-110 shadow-sm"
+                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
                     onClick={(e) => e.stopPropagation()}
                     aria-label={`Visit ${item.title} website`}
+                    style={{ 
+                      color: item.brandColor || "#C9901A"
+                    }}
                   >
                     <ExternalLink size={14} />
                   </a>
@@ -288,13 +276,14 @@ export const ExpandingCards = React.forwardRef<
           </article>
 
           {/* Click for details indicator */}
-          <div className="absolute top-4 right-4 opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-300 pointer-events-none">
+          <div className="absolute top-4 right-4 opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
             <div 
-              className="text-xs font-semibold px-3 py-1.5 rounded-md backdrop-blur-sm"
+              className="text-xs font-semibold px-3 py-1.5 rounded-md backdrop-blur-sm border"
               style={{ 
-                background: "rgba(201,144,26,0.95)",
-                color: "white",
-                boxShadow: "0 2px 8px rgba(201,144,26,0.3)"
+                background: `${item.brandColor || '#C9901A'}20`,
+                color: item.brandColor || "#C9901A",
+                borderColor: `${item.brandColor || '#C9901A'}40`,
+                boxShadow: `0 2px 8px ${item.brandColor || '#C9901A'}30`
               }}
             >
               Click for details
