@@ -8,7 +8,7 @@ import WDCImg from "./assets/images/WDC.png";
 import WestWoodLawImg from "./assets/images/WestWoodLawFirm.png";
 import ConnectorImg from "./assets/images/Connector.png";
 import GreenOasisImg from "./assets/images/TheGreenOasis.png";
-import LuxuriousCleaningImg from "./assets/images/LuxuriousCleaningCo.jpg";
+import LuxuriousCleaningImg from "./assets/images/LuxuriousCleaningCo.png";
 import HYTImg from "./assets/images/HYT.png";
 import FinestFitImg from "./assets/images/TheFinestFit.jpg";
 
