@@ -235,135 +235,180 @@ export function CompaniesExpanding() {
         )}
 
         {/* Company Modal */}
-        {selectedCompany && (
-          <div 
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
-            onClick={closeModal}
-          >
+        {selectedCompany && (() => {
+          // Get brand color for this specific company
+          const modalBrandColor = companyBrandColors[selectedCompany.id] || GOLD;
+          const modalBrandColorTint = `${modalBrandColor}15`; // 15% opacity for light background
+          const modalBrandColorBorder = `${modalBrandColor}30`; // 30% opacity for borders
+          
+          // Special handling for The Finest Fit (white brand color)
+          const isFinestFit = selectedCompany.id === "finest-fit";
+          const badgeTextColor = isFinestFit ? DARK : "#FFFFFF"; // Black text for white badge
+          const badgeBorderColor = isFinestFit ? BORDER : modalBrandColor; // Gray border for white badge
+          const buttonBgColor = isFinestFit ? DARK : modalBrandColor; // Dark button background for white brand
+          const buttonTextColor = "#FFFFFF"; // Always white text on buttons
+          const taglineColor = isFinestFit ? DARK : modalBrandColor; // Dark tagline for white brand
+          const serviceBulletColor = isFinestFit ? DARK : modalBrandColor; // Dark bullets for white brand
+          
+          return (
             <div 
-              className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
-              onClick={(e) => e.stopPropagation()}
+              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+              onClick={closeModal}
             >
-              {/* Modal Header */}
-              <div className="relative h-48 rounded-t-2xl overflow-hidden" style={{ background: "#F9FAFB" }}>
-                <div className="absolute inset-0 flex items-center justify-center p-8">
-                  <img
-                    src={selectedCompany.image}
-                    alt={selectedCompany.name}
-                    className="max-w-full max-h-full object-contain"
-                  />
-                </div>
-                <button
-                  onClick={closeModal}
-                  className="absolute top-4 right-4 w-10 h-10 rounded-full bg-white/90 hover:bg-white flex items-center justify-center text-gray-700 transition-colors"
-                >
-                  <ExternalLink className="rotate-45" size={20} />
-                </button>
-              </div>
-
-              {/* Modal Content */}
-              <div className="p-6 md:p-8 space-y-6">
-                {/* Company Info */}
-                <div>
-                  <div 
-                    className="inline-flex items-center gap-2 px-3 py-1 rounded-full text-xs font-semibold uppercase tracking-wide mb-3"
-                    style={{ background: GOLD_TINT, color: GOLD_DARK }}
+              <div 
+                className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+                onClick={(e) => e.stopPropagation()}
+                style={{
+                  boxShadow: `0 0 80px ${modalBrandColor}40, 0 25px 50px -12px rgba(0, 0, 0, 0.4)`
+                }}
+              >
+                {/* Modal Header */}
+                <div className="relative h-48 rounded-t-2xl overflow-hidden" style={{ background: "#FAFAFA" }}>
+                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                    <img
+                      src={selectedCompany.image}
+                      alt={selectedCompany.name}
+                      className="max-w-full max-h-full object-contain"
+                      style={{
+                        filter: `drop-shadow(0 0 20px ${modalBrandColor}60)`
+                      }}
+                    />
+                  </div>
+                  <button
+                    onClick={closeModal}
+                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
                   >
-                    {selectedCompany.category}
-                  </div>
-                  <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: DARK }}>
-                    {selectedCompany.name}
-                  </h2>
-                  <p className="text-lg" style={{ color: GOLD }}>
-                    {selectedCompany.tagline}
-                  </p>
+                    <ExternalLink className="rotate-45" size={20} />
+                  </button>
                 </div>
 
-                {/* Description */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-2" style={{ color: DARK }}>About</h3>
-                  <p className="leading-relaxed" style={{ color: SLATE }}>
-                    {selectedCompany.description}
-                  </p>
-                </div>
+                {/* Divider */}
+                <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${modalBrandColor}40, transparent)` }} />
 
-                {/* Services */}
-                {selectedCompany.services && selectedCompany.services.length > 0 && (
-                  <div>
-                    <h3 className="text-lg font-semibold mb-3" style={{ color: DARK }}>Services</h3>
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                      {selectedCompany.services.map((service, idx) => (
-                        <div 
-                          key={idx}
-                          className="flex items-center gap-2 p-3 rounded-lg border"
-                          style={{ borderColor: BORDER }}
-                        >
-                          <div className="w-2 h-2 rounded-full" style={{ background: GOLD }} />
-                          <span className="text-sm" style={{ color: SLATE }}>{service}</span>
-                        </div>
-                      ))}
+                {/* Modal Content */}
+                <div className="p-6 md:p-8 space-y-6">
+                  {/* Company Info */}
+                  <div className="text-center">
+                    <div 
+                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-3"
+                      style={{ 
+                        background: modalBrandColor, 
+                        color: badgeTextColor,
+                        fontFamily: "var(--font-display)",
+                        border: `1px solid ${badgeBorderColor}`
+                      }}
+                    >
+                      {selectedCompany.category}
                     </div>
+                    <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                      {selectedCompany.name}
+                    </h2>
+                    <p className="text-lg font-medium italic" style={{ color: taglineColor }}>
+                      {selectedCompany.tagline}
+                    </p>
                   </div>
-                )}
 
-                {/* Social Links & Website */}
-                <div>
-                  <h3 className="text-lg font-semibold mb-3" style={{ color: DARK }}>Connect</h3>
-                  <div className="flex flex-wrap items-center gap-3">
-                    {selectedCompany.facebook && (
-                      <a
-                        href={selectedCompany.facebook}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors hover:-translate-y-0.5"
-                        style={{ borderColor: BORDER }}
-                      >
-                        <FacebookIcon size={18} />
-                        <span className="text-sm" style={{ color: SLATE }}>Facebook</span>
-                      </a>
-                    )}
-                    {selectedCompany.instagram && (
-                      <a
-                        href={selectedCompany.instagram}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors hover:-translate-y-0.5"
-                        style={{ borderColor: BORDER }}
-                      >
-                        <InstagramIcon size={18} />
-                        <span className="text-sm" style={{ color: SLATE }}>Instagram</span>
-                      </a>
-                    )}
-                    {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
-                      <a
-                        href={selectedCompany.youtube}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-2 rounded-lg border transition-colors hover:-translate-y-0.5"
-                        style={{ borderColor: BORDER }}
-                      >
-                        <YoutubeIcon size={18} />
-                        <span className="text-sm" style={{ color: SLATE }}>YouTube</span>
-                      </a>
-                    )}
-                    {selectedCompany.website && selectedCompany.website !== "#" && (
-                      <a
-                        href={selectedCompany.website}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center gap-2 px-4 py-3 rounded-lg font-semibold text-white transition-all hover:-translate-y-0.5"
-                        style={{ background: GOLD_GRAD, boxShadow: `0 4px 12px ${GOLD}30` }}
-                      >
-                        <ExternalLink size={18} />
-                        <span className="text-sm">Visit Website</span>
-                      </a>
-                    )}
+                  {/* Description */}
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                      ABOUT
+                    </h3>
+                    <p className="leading-relaxed" style={{ color: SLATE }}>
+                      {selectedCompany.description}
+                    </p>
+                  </div>
+
+                  {/* Services */}
+                  {selectedCompany.services && selectedCompany.services.length > 0 && (
+                    <div>
+                      <h3 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                        SERVICES
+                      </h3>
+                      <div className="grid grid-cols-2 gap-3">
+                        {selectedCompany.services.map((service, idx) => (
+                          <div 
+                            key={idx}
+                            className="flex items-center gap-2 px-4 py-3 rounded-xl border transition-all hover:shadow-md"
+                            style={{ 
+                              background: "#FAFAFA",
+                              borderColor: modalBrandColorBorder,
+                            }}
+                          >
+                            <div 
+                              className="w-2 h-2 rounded-full" 
+                              style={{ background: serviceBulletColor }}
+                            />
+                            <span className="text-sm font-medium" style={{ color: DARK }}>
+                              {service}
+                            </span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+                  )}
+
+                  {/* Social Links & Website */}
+                  <div>
+                    <h3 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                      CONNECT
+                    </h3>
+                    <div className="flex flex-wrap items-center gap-3">
+                      {selectedCompany.facebook && (
+                        <a
+                          href={selectedCompany.facebook}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                        >
+                          <FacebookIcon size={16} />
+                          Facebook
+                        </a>
+                      )}
+                      {selectedCompany.instagram && (
+                        <a
+                          href={selectedCompany.instagram}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                        >
+                          <InstagramIcon size={16} />
+                          Instagram
+                        </a>
+                      )}
+                      {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
+                        <a
+                          href={selectedCompany.youtube}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                        >
+                          <YoutubeIcon size={16} />
+                          YouTube
+                        </a>
+                      )}
+                      {selectedCompany.website && selectedCompany.website !== "#" && (
+                        <a
+                          href={selectedCompany.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90 ml-auto"
+                          style={{ 
+                            background: buttonBgColor, 
+                            color: buttonTextColor,
+                            fontFamily: "var(--font-display)" 
+                          }}
+                        >
+                          <ExternalLink size={16} />
+                          Visit Website
+                        </a>
+                      )}
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-        )}
+          );
+        })()}
       </div>
     </section>
   );

@@ -147,7 +147,7 @@ export const ExpandingCards = React.forwardRef<
           
           {/* Company Logo - only visible on hover */}
           <div 
-            className="absolute inset-0 flex items-center justify-center transition-all duration-500 ease-out p-8 opacity-0 group-data-[active=true]:opacity-100" 
+            className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out p-8 opacity-0 group-data-[active=true]:opacity-100 gap-6" 
           >
             {/* Loading skeleton */}
             {!imageLoadStates[item.id] && (
@@ -174,8 +174,8 @@ export const ExpandingCards = React.forwardRef<
                 handleImageLoad(item.id);
               }}
               className={cn(
-                "max-w-full max-h-full object-contain transition-all duration-500 ease-out relative z-10",
-                "scale-110 brightness-110",
+                "max-w-[60%] max-h-[40%] object-contain transition-all duration-500 ease-out relative z-10",
+                "brightness-110",
                 !imageLoadStates[item.id] && "opacity-0"
               )}
               style={{
@@ -183,6 +183,28 @@ export const ExpandingCards = React.forwardRef<
               }}
               loading="lazy"
             />
+            
+            {/* Company Name and Tagline */}
+            <div className="text-center space-y-2 z-10">
+              <h3 
+                className="text-xl md:text-2xl font-bold uppercase tracking-wide"
+                style={{ 
+                  color: item.brandColor || "#C9901A",
+                  fontFamily: "var(--font-display)",
+                  textShadow: `0 0 20px ${item.brandColor || '#C9901A'}66`
+                }}
+              >
+                {item.title}
+              </h3>
+              <p 
+                className="text-sm md:text-base text-gray-400 max-w-md px-4"
+                style={{ 
+                  fontFamily: "var(--font-body)",
+                }}
+              >
+                {item.description}
+              </p>
+            </div>
           </div>
           
           <article
@@ -198,7 +220,7 @@ export const ExpandingCards = React.forwardRef<
                   color: item.brandColor || "#C9901A",
                   letterSpacing: "0.2em",
                   fontFamily: "var(--font-display)",
-                  textShadow: `0 0 20px ${item.brandColor || '#C9901A'}66`
+                  textShadow: `0 0 30px ${item.brandColor || '#C9901A'}dd, 0 0 60px ${item.brandColor || '#C9901A'}88, 0 0 90px ${item.brandColor || '#C9901A'}44`
                 }}
               >
                 {item.title}

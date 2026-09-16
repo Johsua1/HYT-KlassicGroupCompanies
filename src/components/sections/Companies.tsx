@@ -32,8 +32,9 @@ export function Companies() {
     // Add brandColor to the company object
     const companyWithBrandColor = {
       ...company,
-      brandColor: companyBrandColors[company.id] || GOLD
+      brandColor: company.id === "brains-infinite" ? "#FF1493" : (companyBrandColors[company.id] || GOLD)
     };
+    console.log("handleSelectCompany - Setting brandColor:", companyWithBrandColor.brandColor, "for", company.name);
     setSelectedCompany(companyWithBrandColor);
   };
 
