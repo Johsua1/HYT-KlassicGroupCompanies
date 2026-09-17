@@ -163,8 +163,8 @@ export function CompaniesExpanding() {
               />
             </div>
 
-            {/* Mobile View - Animated Card List */}
-            <div className="md:hidden space-y-4">
+            {/* Mobile & Tablet View - Responsive Animated Card Grid */}
+            <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filteredCompanies.map((company, index) => {
                 // Get brand color for glow effect
                 const brandColor = companyBrandColors[company.id] || GOLD;
@@ -309,13 +309,13 @@ export function CompaniesExpanding() {
                   animation: 'modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
-                {/* Modal Header */}
-                <div className="relative h-48 rounded-t-2xl overflow-hidden" style={{ background: "#FAFAFA" }}>
-                  <div className="absolute inset-0 flex items-center justify-center p-8">
+                {/* Modal Header - Responsive height and spacing */}
+                <div className="relative h-32 md:h-40 lg:h-48 rounded-t-2xl overflow-hidden" style={{ background: "#FAFAFA" }}>
+                  <div className="absolute inset-0 flex items-center justify-center p-6 md:p-8">
                     <img
                       src={selectedCompany.image}
                       alt={selectedCompany.name}
-                      className="max-w-full max-h-full object-contain"
+                      className="max-w-full max-h-full object-contain transition-all"
                       style={{
                         filter: `drop-shadow(0 0 20px ${modalBrandColor}60)`
                       }}
@@ -323,21 +323,21 @@ export function CompaniesExpanding() {
                   </div>
                   <button
                     onClick={closeModal}
-                    className="absolute top-4 right-4 w-10 h-10 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
+                    className="absolute top-3 right-3 md:top-4 md:right-4 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-95 flex items-center justify-center transition-all"
                   >
-                    <ExternalLink className="rotate-45" size={20} />
+                    <ExternalLink className="rotate-45" size={18} />
                   </button>
                 </div>
 
                 {/* Divider */}
                 <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${modalBrandColor}40, transparent)` }} />
 
-                {/* Modal Content */}
-                <div className="p-6 md:p-8 space-y-6">
+                {/* Modal Content - Responsive spacing and typography */}
+                <div className="p-5 md:p-7 lg:p-8 space-y-5 md:space-y-6">
                   {/* Company Info */}
                   <div className="text-center">
                     <div 
-                      className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-3"
+                      className="inline-flex items-center gap-2 px-3 py-1.5 md:px-4 md:py-2 rounded-full text-xs font-bold uppercase tracking-wider mb-3 transition-all"
                       style={{ 
                         background: modalBrandColor, 
                         color: badgeTextColor,
@@ -347,20 +347,20 @@ export function CompaniesExpanding() {
                     >
                       {selectedCompany.category}
                     </div>
-                    <h2 className="text-2xl md:text-3xl font-bold mb-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 px-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
                       {selectedCompany.name}
                     </h2>
-                    <p className="text-lg font-medium italic" style={{ color: taglineColor }}>
+                    <p className="text-base md:text-lg font-medium italic px-2" style={{ color: taglineColor }}>
                       {selectedCompany.tagline}
                     </p>
                   </div>
 
                   {/* Description */}
                   <div>
-                    <h3 className="text-sm font-bold uppercase tracking-wider mb-3" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                    <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider mb-3" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
                       ABOUT
                     </h3>
-                    <p className="leading-relaxed" style={{ color: SLATE }}>
+                    <p className="text-sm md:text-base leading-relaxed" style={{ color: SLATE }}>
                       {selectedCompany.description}
                     </p>
                   </div>
@@ -368,24 +368,24 @@ export function CompaniesExpanding() {
                   {/* Services */}
                   {selectedCompany.services && selectedCompany.services.length > 0 && (
                     <div>
-                      <h3 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                      <h3 className="text-xs md:text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
                         SERVICES
                       </h3>
-                      <div className="grid grid-cols-2 gap-3">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-2.5 md:gap-3">
                         {selectedCompany.services.map((service, idx) => (
                           <div 
                             key={idx}
-                            className="flex items-center gap-2 px-4 py-3 rounded-xl border transition-all hover:shadow-md"
+                            className="flex items-center gap-2 md:gap-2.5 px-3 py-2.5 md:px-4 md:py-3 rounded-lg md:rounded-xl border transition-all hover:shadow-md hover:scale-105"
                             style={{ 
                               background: "#FAFAFA",
                               borderColor: modalBrandColorBorder,
                             }}
                           >
                             <div 
-                              className="w-2 h-2 rounded-full" 
+                              className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full flex-shrink-0" 
                               style={{ background: serviceBulletColor }}
                             />
-                            <span className="text-sm font-medium" style={{ color: DARK }}>
+                            <span className="text-xs md:text-sm font-medium leading-tight" style={{ color: DARK }}>
                               {service}
                             </span>
                           </div>
@@ -394,22 +394,24 @@ export function CompaniesExpanding() {
                     </div>
                   )}
 
-                  {/* Social Links & Website - Responsive Design */}
+                  {/* Social Links & Website - Three Responsive Layouts */}
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
                       CONNECT
                     </h3>
-                    <div className="flex flex-wrap items-center gap-3">
+                    
+                    {/* Desktop (lg+): Horizontal flex with text labels, auto spacing */}
+                    <div className="hidden lg:flex flex-wrap items-center gap-3">
                       {selectedCompany.facebook && (
                         <a
                           href={selectedCompany.facebook}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium"
                           aria-label="Facebook"
                         >
                           <FacebookIcon size={18} />
-                          <span className="hidden md:inline">Facebook</span>
+                          <span>Facebook</span>
                         </a>
                       )}
                       {selectedCompany.instagram && (
@@ -417,11 +419,11 @@ export function CompaniesExpanding() {
                           href={selectedCompany.instagram}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium"
                           aria-label="Instagram"
                         >
                           <InstagramIcon size={18} />
-                          <span className="hidden md:inline">Instagram</span>
+                          <span>Instagram</span>
                         </a>
                       )}
                       {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
@@ -429,11 +431,11 @@ export function CompaniesExpanding() {
                           href={selectedCompany.youtube}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          className="flex items-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium"
                           aria-label="YouTube"
                         >
                           <YoutubeIcon size={18} />
-                          <span className="hidden md:inline">YouTube</span>
+                          <span>YouTube</span>
                         </a>
                       )}
                       {selectedCompany.website && selectedCompany.website !== "#" && (
@@ -441,7 +443,7 @@ export function CompaniesExpanding() {
                           href={selectedCompany.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90 md:ml-auto flex-1 md:flex-initial justify-center"
+                          className="flex items-center gap-2 px-6 py-2.5 rounded-lg text-sm font-semibold transition-all hover:opacity-90 hover:scale-105 ml-auto"
                           style={{ 
                             background: buttonBgColor, 
                             color: buttonTextColor,
@@ -450,6 +452,127 @@ export function CompaniesExpanding() {
                         >
                           <ExternalLink size={16} />
                           Visit Website
+                        </a>
+                      )}
+                    </div>
+                    
+                    {/* Tablet (md to lg): Professional grid layout with compact buttons */}
+                    <div className="hidden md:grid lg:hidden grid-cols-2 gap-3">
+                      {/* Social Media Buttons - Grid layout for balance */}
+                      <div className="col-span-2 flex items-center gap-3">
+                        {selectedCompany.facebook && (
+                          <a
+                            href={selectedCompany.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium flex-1"
+                            aria-label="Facebook"
+                          >
+                            <FacebookIcon size={18} />
+                            <span className="font-semibold">Facebook</span>
+                          </a>
+                        )}
+                        {selectedCompany.instagram && (
+                          <a
+                            href={selectedCompany.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium flex-1"
+                            aria-label="Instagram"
+                          >
+                            <InstagramIcon size={18} />
+                            <span className="font-semibold">Instagram</span>
+                          </a>
+                        )}
+                        {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
+                          <a
+                            href={selectedCompany.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-lg bg-gray-900 text-white hover:opacity-90 hover:scale-105 transition-all text-sm font-medium flex-1"
+                            aria-label="YouTube"
+                          >
+                            <YoutubeIcon size={18} />
+                            <span className="font-semibold">YouTube</span>
+                          </a>
+                        )}
+                      </div>
+                      
+                      {/* Visit Website Button - Full width, prominent */}
+                      {selectedCompany.website && selectedCompany.website !== "#" && (
+                        <a
+                          href={selectedCompany.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="col-span-2 flex items-center justify-center gap-2 px-6 py-3 rounded-lg text-base font-bold transition-all hover:opacity-90 hover:scale-105 hover:shadow-lg"
+                          style={{ 
+                            background: buttonBgColor, 
+                            color: buttonTextColor,
+                            fontFamily: "var(--font-display)",
+                            boxShadow: `0 4px 12px ${buttonBgColor}30`
+                          }}
+                        >
+                          <ExternalLink size={18} />
+                          Visit Website
+                        </a>
+                      )}
+                    </div>
+                    
+                    {/* Mobile (< md): Compact icon-only layout */}
+                    <div className="flex md:hidden justify-between items-center gap-3">
+                      {/* Social Icons - Left side, icon-only */}
+                      <div className="flex items-center gap-2">
+                        {selectedCompany.facebook && (
+                          <a
+                            href={selectedCompany.facebook}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            aria-label="Facebook"
+                          >
+                            <FacebookIcon size={20} />
+                          </a>
+                        )}
+                        {selectedCompany.instagram && (
+                          <a
+                            href={selectedCompany.instagram}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            aria-label="Instagram"
+                          >
+                            <InstagramIcon size={20} />
+                          </a>
+                        )}
+                        {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
+                          <a
+                            href={selectedCompany.youtube}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            aria-label="YouTube"
+                          >
+                            <YoutubeIcon size={20} />
+                          </a>
+                        )}
+                      </div>
+                      
+                      {/* Visit Website Button - Right side, fixed width */}
+                      {selectedCompany.website && selectedCompany.website !== "#" && (
+                        <a
+                          href={selectedCompany.website}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+                          style={{ 
+                            background: buttonBgColor, 
+                            color: buttonTextColor,
+                            fontFamily: "var(--font-display)",
+                            minWidth: '140px'
+                          }}
+                        >
+                          <ExternalLink size={16} />
+                          <span>Visit</span>
                         </a>
                       )}
                     </div>
