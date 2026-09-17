@@ -163,51 +163,94 @@ export function CompaniesExpanding() {
               />
             </div>
 
-            {/* Mobile View - Simple Card List */}
+            {/* Mobile View - Animated Card List */}
             <div className="md:hidden space-y-4">
-              {filteredCompanies.map((company) => (
-                <div
-                  key={company.id}
-                  className="bg-white rounded-xl border shadow-sm hover:shadow-md transition-shadow cursor-pointer overflow-hidden"
-                  style={{ borderColor: BORDER }}
-                  onClick={() => setSelectedCompany(company)}
-                >
-                  {/* Category Badge */}
-                  <div className="px-4 pt-4 pb-2">
-                    <span 
-                      className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
-                      style={{ 
-                        background: GOLD_TINT,
-                        color: GOLD_DARK
+              {filteredCompanies.map((company, index) => {
+                // Get brand color for glow effect
+                const brandColor = companyBrandColors[company.id] || GOLD;
+                console.log('Company glow:', company.name, 'Color:', brandColor);
+                
+                return (
+                  <div
+                    key={company.id}
+                    className="bg-white rounded-xl border shadow-sm hover:shadow-lg active:scale-[0.98] cursor-pointer overflow-hidden transform transition-all duration-300"
+                    style={{ 
+                      borderColor: BORDER,
+                      animation: `slideInUp 0.5s ease-out ${index * 0.1}s both`,
+                    }}
+                    onClick={() => setSelectedCompany(company)}
+                  >
+                    {/* Category Badge with slide-in animation */}
+                    <div 
+                      className="px-4 pt-4 pb-2"
+                      style={{
+                        animation: `fadeInRight 0.6s ease-out ${index * 0.1 + 0.2}s both`
                       }}
                     >
-                      {company.category}
-                    </span>
-                  </div>
+                      <span 
+                        className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all duration-200 hover:scale-105"
+                        style={{ 
+                          background: GOLD_TINT,
+                          color: GOLD_DARK
+                        }}
+                      >
+                        {company.category}
+                      </span>
+                    </div>
 
-                  {/* Company Logo */}
-                  <div className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8">
-                    <img
-                      src={company.image}
-                      alt={company.name}
-                      className="h-20 w-auto object-contain"
-                    />
-                  </div>
-
-                  {/* Company Info */}
-                  <div className="px-4 pb-4">
-                    <h3 
-                      className="text-lg font-bold mb-1"
-                      style={{ color: DARK, fontFamily: "var(--font-display)" }}
+                    {/* Company Logo with scale animation and glow effect */}
+                    <div 
+                      className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8 transition-all duration-300"
+                      style={{
+                        animation: `scaleIn 0.6s ease-out ${index * 0.1 + 0.3}s both`
+                      }}
                     >
-                      {company.name}
-                    </h3>
-                    <p className="text-sm" style={{ color: SLATE }}>
-                      {company.tagline}
-                    </p>
+                      <img
+                        src={company.image}
+                        alt={company.name}
+                        className="h-20 w-auto object-contain transition-transform duration-300 hover:scale-110"
+                        style={{
+                          filter: `drop-shadow(0 0 30px ${brandColor}99) drop-shadow(0 0 50px ${brandColor}66) drop-shadow(0 0 70px ${brandColor}33)`
+                        }}
+                      />
+                    </div>
+
+                    {/* Company Info with fade-up animation */}
+                    <div 
+                      className="px-4 pb-4"
+                      style={{
+                        animation: `fadeInUp 0.6s ease-out ${index * 0.1 + 0.4}s both`
+                      }}
+                    >
+                      <h3 
+                        className="text-lg font-bold mb-1 transition-all duration-200"
+                        style={{ 
+                          color: DARK, 
+                          fontFamily: "var(--font-display)"
+                        }}
+                      >
+                        {company.name}
+                      </h3>
+                      <p className="text-sm transition-colors duration-200" style={{ color: SLATE }}>
+                        {company.tagline}
+                      </p>
+                    </div>
+
+                    {/* Tap indicator - subtle pulse */}
+                    <div 
+                      className="absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
+                      style={{ 
+                        background: `${GOLD}20`,
+                        animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
+                      }}
+                    >
+                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M6 12L10 8L6 4" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
+                    </div>
                   </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
             {/* Call to Action - Improved messaging */}
@@ -254,12 +297,16 @@ export function CompaniesExpanding() {
             <div 
               className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
               onClick={closeModal}
+              style={{
+                animation: 'modalBackdropFade 0.3s ease-out'
+              }}
             >
               <div 
                 className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
                 style={{
-                  boxShadow: `0 0 80px ${modalBrandColor}40, 0 25px 50px -12px rgba(0, 0, 0, 0.4)`
+                  boxShadow: `0 0 80px ${modalBrandColor}40, 0 25px 50px -12px rgba(0, 0, 0, 0.4)`,
+                  animation: 'modalSlideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                 }}
               >
                 {/* Modal Header */}
@@ -347,7 +394,7 @@ export function CompaniesExpanding() {
                     </div>
                   )}
 
-                  {/* Social Links & Website */}
+                  {/* Social Links & Website - Responsive Design */}
                   <div>
                     <h3 className="text-sm font-bold uppercase tracking-wider mb-4" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
                       CONNECT
@@ -358,10 +405,11 @@ export function CompaniesExpanding() {
                           href={selectedCompany.facebook}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          aria-label="Facebook"
                         >
-                          <FacebookIcon size={16} />
-                          Facebook
+                          <FacebookIcon size={18} />
+                          <span className="hidden md:inline">Facebook</span>
                         </a>
                       )}
                       {selectedCompany.instagram && (
@@ -369,10 +417,11 @@ export function CompaniesExpanding() {
                           href={selectedCompany.instagram}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          aria-label="Instagram"
                         >
-                          <InstagramIcon size={16} />
-                          Instagram
+                          <InstagramIcon size={18} />
+                          <span className="hidden md:inline">Instagram</span>
                         </a>
                       )}
                       {selectedCompany.youtube && selectedCompany.youtube !== "#" && (
@@ -380,10 +429,11 @@ export function CompaniesExpanding() {
                           href={selectedCompany.youtube}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium"
+                          className="flex items-center justify-center gap-2 px-4 py-2 rounded-lg bg-gray-900 text-white hover:opacity-90 transition-opacity text-sm font-medium md:w-auto w-12 h-12"
+                          aria-label="YouTube"
                         >
-                          <YoutubeIcon size={16} />
-                          YouTube
+                          <YoutubeIcon size={18} />
+                          <span className="hidden md:inline">YouTube</span>
                         </a>
                       )}
                       {selectedCompany.website && selectedCompany.website !== "#" && (
@@ -391,7 +441,7 @@ export function CompaniesExpanding() {
                           href={selectedCompany.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90 ml-auto"
+                          className="flex items-center gap-2 px-5 py-2 rounded-lg text-sm font-semibold transition-all hover:opacity-90 md:ml-auto flex-1 md:flex-initial justify-center"
                           style={{ 
                             background: buttonBgColor, 
                             color: buttonTextColor,
