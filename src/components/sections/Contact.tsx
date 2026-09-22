@@ -34,6 +34,21 @@ const COMPANY_COLORS: Record<string, string> = {
   "general": GOLD,
 };
 
+// Company logo URLs (Imgur hosted) for email branding
+const COMPANY_LOGO_URLS: Record<string, string> = {
+  "brains-infinite": "https://i.imgur.com/79nGkIl.png",
+  "klassic-solutions": "https://i.imgur.com/YTys2A2.png",
+  "klassic-marketing": "https://i.imgur.com/cvSCgL7.png",
+  "westwood-development": "https://i.imgur.com/DJtceOw.png",
+  "westwood-law": "https://i.imgur.com/wUD4N0q.png",
+  "connector": "https://i.imgur.com/jfOf3iX.png",
+  "green-oasis": "https://i.imgur.com/tH9UEUe.png",
+  "luxurious-cleaning": "https://i.imgur.com/F4gKGdd.png",
+  "hyt-foundation": "https://i.imgur.com/ACnsLKr.png",
+  "finest-fit": "https://i.imgur.com/99v7itv.png",
+  "general": "https://i.imgur.com/Y7nyCv8.png", // KGC logo for general inquiry
+};
+
 export function Contact() {
   const [selectedCompany, setSelectedCompany] = useState<string>("");
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
@@ -59,9 +74,20 @@ export function Contact() {
 
     try {
       const targetEmail = COMPANY_EMAILS[selectedCompany] || COMPANY_EMAILS.general;
+      const selectedCompanyData = companies.find(c => c.id === selectedCompany);
       const companyName = selectedCompany === "general" 
         ? "General Inquiry" 
-        : companies.find(c => c.id === selectedCompany)?.name || "Unknown Company";
+        : selectedCompanyData?.name || "Unknown Company";
+      
+      // Get brand color for email styling
+      const brandColor = COMPANY_COLORS[selectedCompany] || GOLD;
+      
+      // Get company logo URL for email
+      const companyLogoUrl = COMPANY_LOGO_URLS[selectedCompany] || "";
+      
+      // Get company details for branded email
+      const companyWebsite = selectedCompanyData?.website || "https://klassicgroup.com";
+      const companyTagline = selectedCompanyData?.tagline || "";
 
       const templateParams = {
         from_name: form.name,
@@ -71,6 +97,15 @@ export function Contact() {
         subject: `[${companyName}] ${form.subject}`,
         message: form.message,
         reply_to: form.email,
+        // BRANDING PARAMETERS for logo-first email design
+        company_name: companyName,
+        company_tagline: companyTagline,
+        company_website: companyWebsite,
+        company_logo: companyLogoUrl, // Imgur hosted logo URL
+        brand_color: brandColor,
+        brand_color_light: `${brandColor}15`, // 15% opacity for backgrounds
+        brand_color_medium: `${brandColor}30`, // 30% opacity for borders
+        user_subject: form.subject, // User's actual subject
       };
 
       await emailjs.send(
