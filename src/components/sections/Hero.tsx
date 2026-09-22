@@ -1,6 +1,76 @@
+import { useState, useEffect, useRef } from "react";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, BORDER } from "@/constants/colors";
 import KGCCImage from "@/assets/images/KGCC.png";
+
+// Animated Counter Component
+function AnimatedCounter({ 
+  value, 
+  duration = 2000 
+}: { 
+  value: string; 
+  duration?: number; 
+}) {
+  const [count, setCount] = useState(0);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  // Parse the numeric value and suffix (e.g., "10+" -> 10 and "+")
+  const match = value.match(/^(\d+)(.*)$/);
+  const targetNumber = match ? parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : value;
+
+  useEffect(() => {
+    // Intersection Observer to trigger animation when element is visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          
+          // Easing function for smooth deceleration
+          const easeOutQuart = (t: number): number => 1 - Math.pow(1 - t, 4);
+          
+          const startTime = Date.now();
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeOutQuart(progress);
+            
+            const currentCount = Math.floor(easedProgress * targetNumber);
+            setCount(currentCount);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+          
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 } // Trigger when 30% of element is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [targetNumber, duration, hasAnimated]);
+
+  return (
+    <div
+      ref={ref}
+      className="text-3xl font-bold mb-1 transition-all duration-300"
+      style={{ color: GOLD }}
+    >
+      {targetNumber === 0 ? value : `${count}${suffix}`}
+    </div>
+  );
+}
 
 export function Hero() {
   return (
@@ -68,21 +138,21 @@ export function Hero() {
               <div className="absolute inset-0" style={{ background: "linear-gradient(135deg, transparent 50%, rgba(201, 144, 26, 0.1) 100%)" }} />
             </div>
             
-            {/* Floating Badge - Top Right - 7+ Industries */}
+            {/* Floating Badge - Top Right - 7+ Industries with animation */}
             <div 
               className="absolute -top-4 -right-4 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              <div className="text-3xl font-bold mb-1" style={{ color: GOLD }}>7+</div>
+              <AnimatedCounter value="7+" duration={2000} />
               <div className="text-xs font-medium text-gray-600">Industries Served</div>
             </div>
 
-            {/* Floating Badge - Bottom Left - 10+ Companies */}
+            {/* Floating Badge - Bottom Left - 10+ Companies with animation */}
             <div 
               className="absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
               style={{ fontFamily: "var(--font-display)" }}
             >
-              <div className="text-3xl font-bold mb-1" style={{ color: GOLD }}>10+</div>
+              <AnimatedCounter value="10+" duration={2000} />
               <div className="text-xs font-medium text-gray-600">Companies Nationwide</div>
             </div>
           </div>

@@ -27,16 +27,43 @@ interface ExpandingCardsProps extends React.HTMLAttributes<HTMLUListElement> {
   onCardClick?: (item: CardItem) => void;
   showVerticalPattern?: boolean;
   showCategoryText?: boolean;
+  disableHover?: boolean; // NEW: Disable hover interaction
+  defaultExpanded?: boolean; // NEW: All cards expanded by default
+}
+
+// Tooltip component for collapsed cards
+function CompanyTooltip({ name, isVisible }: { name: string; isVisible: boolean }) {
+  if (!isVisible) return null;
+  
+  return (
+    <div 
+      className="absolute -top-12 left-1/2 -translate-x-1/2 px-3 py-2 bg-gray-900 text-white text-xs font-semibold rounded-lg shadow-xl whitespace-nowrap pointer-events-none z-50"
+      style={{
+        animation: 'fadeIn 0.2s ease-out'
+      }}
+    >
+      {name}
+      <div className="absolute -bottom-1 left-1/2 -translate-x-1/2 w-2 h-2 bg-gray-900 rotate-45" />
+    </div>
+  );
 }
 
 export const ExpandingCards = React.forwardRef<
   HTMLUListElement,
   ExpandingCardsProps
->(({ className, items, defaultActiveIndex = 0, onCardClick, showVerticalPattern = false, showCategoryText = true, ...props }, ref) => {
-  const [activeIndex, setActiveIndex] = React.useState<number | null>(
-    null,
-  );
-  
+>(({ 
+  className, 
+  items, 
+  defaultActiveIndex = 0, 
+  onCardClick, 
+  showVerticalPattern = false, 
+  showCategoryText = true, 
+  disableHover = false, // NEW
+  defaultExpanded = false, // NEW
+  ...props 
+}, ref) => {
+  const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
+  const [hoveredIndex, setHoveredIndex] = React.useState<number | null>(null);
   const [isDesktop, setIsDesktop] = React.useState(false);
   const [imageLoadStates, setImageLoadStates] = React.useState<Record<string | number, boolean>>({});
   
@@ -50,6 +77,18 @@ export const ExpandingCards = React.forwardRef<
   }, []);
   
   const gridStyle = React.useMemo(() => {
+    // If defaultExpanded, all cards get equal width (no collapsing)
+    if (defaultExpanded) {
+      if (isDesktop) {
+        const columns = items.map(() => "1fr").join(" ");
+        return { gridTemplateColumns: columns };
+      } else {
+        const rows = items.map(() => "1fr").join(" ");
+        return { gridTemplateRows: rows };
+      }
+    }
+    
+    // Original expanding behavior
     if (activeIndex === null) {
       // All cards equal size when nothing is hovered
       if (isDesktop) {
@@ -72,10 +111,12 @@ export const ExpandingCards = React.forwardRef<
         .join(" ");
       return { gridTemplateRows: rows };
     }
-  }, [activeIndex, items.length, isDesktop]);
+  }, [activeIndex, items.length, isDesktop, defaultExpanded]);
   
   const handleInteraction = (index: number) => {
-    setActiveIndex(index);
+    if (!disableHover) {
+      setActiveIndex(index);
+    }
   };
 
   const handleCardClick = (item: CardItem, e: React.MouseEvent) => {
@@ -90,6 +131,18 @@ export const ExpandingCards = React.forwardRef<
   const handleImageLoad = (itemId: string | number) => {
     setImageLoadStates(prev => ({ ...prev, [itemId]: true }));
   };
+
+  const handleKeyDown = (e: React.KeyboardEvent, index: number, item: CardItem) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      if (!disableHover) {
+        handleInteraction(index);
+      }
+      if (e.key === 'Enter' && onCardClick) {
+        onCardClick(item);
+      }
+    }
+  };
   
   return (
     <ul
@@ -97,7 +150,7 @@ export const ExpandingCards = React.forwardRef<
         "w-full max-w-6xl gap-2",
         "grid",
         "h-[600px] md:h-[500px]",
-        "transition-[grid-template-columns,grid-template-rows] duration-500 ease-out",
+        !defaultExpanded && "transition-[grid-template-columns,grid-template-rows] duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
         className,
       )}
       style={{
@@ -110,210 +163,250 @@ export const ExpandingCards = React.forwardRef<
       ref={ref}
       {...props}
     >
-      {items.map((item, index) => (
-        <li
-          key={item.id}
-          className={cn(
-            "group relative cursor-pointer overflow-hidden rounded-xl border-2 bg-card text-card-foreground shadow-lg hover:shadow-2xl",
-            "md:min-w-[80px]",
-            "min-h-0 min-w-0",
-            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-            "transition-all duration-500 ease-out",
-            "hover:-translate-y-1"
-          )}
-          style={{
-            borderColor: activeIndex === index ? (item.brandColor || "#C9901A") : "#E5E7EB",
-            boxShadow: activeIndex === index 
-              ? `0 20px 50px ${item.brandColor || '#C9901A'}40, 0 0 0 1px ${item.brandColor || '#C9901A'}20`
-              : undefined
-          }}
-          onMouseEnter={() => handleInteraction(index)}
-          onMouseLeave={() => setActiveIndex(null)}
-          onFocus={() => handleInteraction(index)}
-          onClick={(e) => {
-            handleInteraction(index);
-            handleCardClick(item, e);
-          }}
-          tabIndex={0}
-          role="button"
-          aria-label={`View ${item.title}`}
-          data-active={activeIndex === index}
-        >
-          {/* Pure Black Background */}
-          <div 
-            className="absolute inset-0 transition-all duration-300"
-            style={{ background: "#000000" }}
-          />
-          
-          {/* Company Logo - only visible on hover */}
-          <div 
-            className="absolute inset-0 flex flex-col items-center justify-center transition-all duration-500 ease-out p-8 opacity-0 group-data-[active=true]:opacity-100 gap-6" 
+      {items.map((item, index) => {
+        // In defaultExpanded mode, treat all cards as "active"
+        const isActive = defaultExpanded ? true : activeIndex === index;
+        const isHovered = hoveredIndex === index;
+        
+        return (
+          <li
+            key={item.id}
+            className={cn(
+              "group relative cursor-pointer overflow-hidden rounded-xl border-2 bg-card text-card-foreground shadow-lg hover:shadow-2xl",
+              "md:min-w-[80px]",
+              "min-h-0 min-w-0",
+              "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
+              "transition-all duration-[400ms] ease-[cubic-bezier(0.4,0,0.2,1)]",
+              !isActive && !defaultExpanded && "hover:-translate-y-1"
+            )}
+            style={{
+              borderColor: isActive ? (item.brandColor || "#C9901A") : "#E5E7EB",
+              boxShadow: isActive 
+                ? `0 20px 50px ${item.brandColor || '#C9901A'}40, 0 0 0 1px ${item.brandColor || '#C9901A'}20`
+                : undefined
+            }}
+            onMouseEnter={() => {
+              if (!disableHover) {
+                handleInteraction(index);
+                setHoveredIndex(index);
+              }
+            }}
+            onMouseLeave={() => {
+              if (!disableHover) {
+                setActiveIndex(null);
+                setHoveredIndex(null);
+              }
+            }}
+            onFocus={() => !disableHover && handleInteraction(index)}
+            onClick={(e) => {
+              if (!disableHover) {
+                handleInteraction(index);
+              }
+              handleCardClick(item, e);
+            }}
+            onKeyDown={(e) => handleKeyDown(e, index, item)}
+            tabIndex={0}
+            role="button"
+            aria-label={`View ${item.title}`}
+            aria-expanded={isActive}
+            data-active={isActive}
           >
-            {/* Loading skeleton */}
-            {!imageLoadStates[item.id] && (
-              <div className="absolute inset-0 flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+            {/* Premium Black Background */}
+            <div 
+              className="absolute inset-0 transition-all duration-400"
+              style={{ background: "#000000" }}
+            />
+            
+            {/* COLLAPSED STATE - Logo Only (Hidden when defaultExpanded) */}
+            {!defaultExpanded && (
+              <div 
+                className={cn(
+                  "absolute inset-0 flex items-center justify-center p-6 transition-opacity duration-300",
+                  isActive ? "opacity-0 pointer-events-none" : "opacity-100"
+                )}
+              >
+                {/* Brand Color Accent Strip */}
+                <div 
+                  className="absolute left-0 top-0 bottom-0 w-1 transition-all duration-300"
+                  style={{ 
+                    background: item.brandColor || "#C9901A",
+                    opacity: isHovered ? 1 : 0.5
+                  }}
+                />
+                
+                {/* Company Logo - Centered */}
+                <div className="relative">
+                  <img
+                    src={item.imgSrc}
+                    alt={item.title}
+                    onLoad={() => handleImageLoad(item.id)}
+                    className={cn(
+                      "w-full h-auto object-contain transition-all duration-300",
+                      "max-w-[120px] max-h-[120px]",
+                      isHovered && "scale-110",
+                      !imageLoadStates[item.id] && "opacity-0"
+                    )}
+                    style={{
+                      filter: `drop-shadow(0 4px 12px ${item.brandColor || '#C9901A'}40)`
+                    }}
+                    loading="lazy"
+                  />
+                  
+                  {/* Tooltip on hover */}
+                  <CompanyTooltip name={item.title} isVisible={isHovered && !isActive && !disableHover} />
+                </div>
               </div>
             )}
             
-            {/* Glow effect behind logo on hover - uses company brand color */}
+            {/* ACTIVE/EXPANDED STATE - Full Content (Always shown when defaultExpanded) */}
             <div 
-              className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 ease-out pointer-events-none"
-              style={{
-                filter: "blur(40px)",
-                background: `radial-gradient(circle, ${item.brandColor || '#C9901A'}60 0%, transparent 70%)`
-              }}
-            />
-            
-            <img
-              src={item.imgSrc}
-              alt={item.title}
-              onLoad={() => handleImageLoad(item.id)}
-              onError={(e) => {
-                e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23333' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ELogo%3C/text%3E%3C/svg%3E";
-                handleImageLoad(item.id);
-              }}
               className={cn(
-                "max-w-[60%] max-h-[40%] object-contain transition-all duration-500 ease-out relative z-10",
-                "brightness-110",
-                !imageLoadStates[item.id] && "opacity-0"
+                "absolute inset-0 flex flex-col justify-center p-6 md:p-8 transition-opacity duration-300",
+                isActive ? "opacity-100" : "opacity-0 pointer-events-none"
               )}
-              style={{
-                filter: `drop-shadow(0 0 30px ${item.brandColor || '#C9901A'}dd) drop-shadow(0 0 60px ${item.brandColor || '#C9901A'}88)`
-              }}
-              loading="lazy"
-            />
-            
-            {/* Company Name and Tagline */}
-            <div className="text-center space-y-2 z-10">
-              <h3 
-                className="text-xl md:text-2xl font-bold uppercase tracking-wide"
-                style={{ 
-                  color: item.brandColor || "#C9901A",
-                  fontFamily: "var(--font-display)",
-                  textShadow: `0 0 20px ${item.brandColor || '#C9901A'}66`
+            >
+              {/* Loading skeleton */}
+              {!imageLoadStates[item.id] && (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <Loader2 className="w-8 h-8 animate-spin text-gray-600" />
+                </div>
+              )}
+              
+              {/* Background Glow */}
+              <div 
+                className="absolute inset-0 flex items-center justify-center transition-opacity duration-500 pointer-events-none"
+                style={{
+                  filter: "blur(60px)",
+                  background: `radial-gradient(circle, ${item.brandColor || '#C9901A'}40 0%, transparent 70%)`
                 }}
-              >
-                {item.title}
-              </h3>
-              <p 
-                className="text-sm md:text-base text-gray-400 max-w-md px-4"
-                style={{ 
-                  fontFamily: "var(--font-body)",
-                }}
-              >
-                {item.description}
-              </p>
-            </div>
-          </div>
-          
-          <article
-            className="absolute inset-0 flex flex-col justify-end p-4 md:p-6"
-          >
-            {/* Vertical Company Name - visible when NOT hovered */}
-            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 transition-all duration-300 ease-out opacity-100 group-data-[active=true]:opacity-0">
-              <h3 
-                className="text-lg md:text-xl font-bold uppercase tracking-widest"
-                style={{ 
-                  writingMode: "vertical-rl",
-                  textOrientation: "mixed",
-                  color: item.brandColor || "#C9901A",
-                  letterSpacing: "0.2em",
-                  fontFamily: "var(--font-display)",
-                  textShadow: `0 0 30px ${item.brandColor || '#C9901A'}dd, 0 0 60px ${item.brandColor || '#C9901A'}88, 0 0 90px ${item.brandColor || '#C9901A'}44`
-                }}
-              >
-                {item.title}
-              </h3>
-            </div>
-
-            {/* Social Media Links - show on hover at top-left */}
-            <div className="absolute top-4 left-4 md:top-6 md:left-6 opacity-0 group-data-[active=true]:opacity-100 transition-all duration-300 ease-out z-20">
-              <div className="flex items-center gap-2">
-                {item.socialLinks?.facebook && (
-                  <a
-                    href={item.socialLinks.facebook}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`${item.title} Facebook`}
-                    style={{ 
-                      color: item.brandColor || "#C9901A"
-                    }}
-                  >
-                    <FacebookIcon size={14} />
-                  </a>
-                )}
-                {item.socialLinks?.instagram && (
-                  <a
-                    href={item.socialLinks.instagram}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`${item.title} Instagram`}
-                    style={{ 
-                      color: item.brandColor || "#C9901A"
-                    }}
-                  >
-                    <InstagramIcon size={14} />
-                  </a>
-                )}
-                {item.socialLinks?.youtube && item.socialLinks.youtube !== "#" && (
-                  <a
-                    href={item.socialLinks.youtube}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`${item.title} YouTube`}
-                    style={{ 
-                      color: item.brandColor || "#C9901A"
-                    }}
-                  >
-                    <YoutubeIcon size={14} />
-                  </a>
-                )}
-                {item.linkHref && item.linkHref !== "#" && (
-                  <a
-                    href={item.linkHref}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="w-8 h-8 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white hover:text-white transition-all hover:scale-110 shadow-sm border border-white/20"
-                    onClick={(e) => e.stopPropagation()}
-                    aria-label={`Visit ${item.title} website`}
-                    style={{ 
-                      color: item.brandColor || "#C9901A"
-                    }}
-                  >
-                    <ExternalLink size={14} />
-                  </a>
-                )}
+              />
+              
+              {/* Content Container */}
+              <div className="relative z-10 flex flex-col items-center text-center space-y-4">
+                {/* Company Logo - Large */}
+                <img
+                  src={item.imgSrc}
+                  alt={item.title}
+                  onLoad={() => handleImageLoad(item.id)}
+                  onError={(e) => {
+                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23333' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ELogo%3C/text%3E%3C/svg%3E";
+                    handleImageLoad(item.id);
+                  }}
+                  className={cn(
+                    "max-w-[180px] max-h-[120px] object-contain mb-2 transition-all duration-500",
+                    !imageLoadStates[item.id] && "opacity-0"
+                  )}
+                  style={{
+                    filter: `drop-shadow(0 4px 24px ${item.brandColor || '#C9901A'}80) drop-shadow(0 2px 12px ${item.brandColor || '#C9901A'}60)`,
+                    animation: isActive && !defaultExpanded ? 'scaleIn 0.4s ease-out' : undefined
+                  }}
+                  loading="lazy"
+                />
+                
+                {/* Company Name */}
+                <h3 
+                  className="text-xl md:text-2xl font-bold uppercase tracking-wide"
+                  style={{ 
+                    color: item.brandColor || "#C9901A",
+                    fontFamily: "var(--font-display)",
+                    textShadow: `0 2px 16px ${item.brandColor || '#C9901A'}60`,
+                    animation: isActive && !defaultExpanded ? 'fadeInUp 0.5s ease-out 0.1s both' : undefined
+                  }}
+                >
+                  {item.title}
+                </h3>
+                
+                {/* Description */}
+                <p 
+                  className="text-sm md:text-base text-gray-400 max-w-md px-2"
+                  style={{ 
+                    fontFamily: "var(--font-body)",
+                    animation: isActive && !defaultExpanded ? 'fadeInUp 0.5s ease-out 0.2s both' : undefined
+                  }}
+                >
+                  {item.description}
+                </p>
+                
+                {/* Social Links */}
+                <div 
+                  className="flex items-center gap-2 pt-2"
+                  style={{
+                    animation: isActive && !defaultExpanded ? 'fadeInUp 0.5s ease-out 0.3s both' : undefined
+                  }}
+                >
+                  {item.socialLinks?.facebook && (
+                    <a
+                      href={item.socialLinks.facebook}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-110 shadow-sm border border-white/20"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`${item.title} Facebook`}
+                    >
+                      <FacebookIcon size={16} />
+                    </a>
+                  )}
+                  {item.socialLinks?.instagram && (
+                    <a
+                      href={item.socialLinks.instagram}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-110 shadow-sm border border-white/20"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`${item.title} Instagram`}
+                    >
+                      <InstagramIcon size={16} />
+                    </a>
+                  )}
+                  {item.socialLinks?.youtube && item.socialLinks.youtube !== "#" && (
+                    <a
+                      href={item.socialLinks.youtube}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-110 shadow-sm border border-white/20"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`${item.title} YouTube`}
+                    >
+                      <YoutubeIcon size={16} />
+                    </a>
+                  )}
+                  {item.linkHref && item.linkHref !== "#" && (
+                    <a
+                      href={item.linkHref}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="w-9 h-9 rounded-lg bg-white/10 backdrop-blur-sm hover:bg-white/20 flex items-center justify-center text-white transition-all hover:scale-110 shadow-sm border border-white/20"
+                      onClick={(e) => e.stopPropagation()}
+                      aria-label={`Visit ${item.title} website`}
+                    >
+                      <ExternalLink size={16} />
+                    </a>
+                  )}
+                </div>
+                
+                {/* CTA Button */}
+                <button
+                  className="mt-4 px-6 py-2.5 rounded-lg text-sm font-semibold backdrop-blur-sm border transition-all hover:scale-105 active:scale-95"
+                  style={{ 
+                    background: `${item.brandColor || '#C9901A'}20`,
+                    color: item.brandColor || "#C9901A",
+                    borderColor: `${item.brandColor || '#C9901A'}40`,
+                    boxShadow: `0 4px 12px ${item.brandColor || '#C9901A'}30`,
+                    animation: isActive && !defaultExpanded ? 'fadeInUp 0.5s ease-out 0.4s both' : undefined
+                  }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    if (onCardClick) onCardClick(item);
+                  }}
+                  aria-label={`View full details for ${item.title}`}
+                >
+                  Click for Full Details
+                </button>
               </div>
             </div>
-
-            {/* Expanded content - HIDDEN to keep focus on logo */}
-            {/* When hovered, only the logo is visible and bright */}
-          </article>
-
-          {/* Click for details indicator */}
-          <div className="absolute top-4 right-4 opacity-0 group-data-[active=true]:opacity-100 transition-opacity duration-300 pointer-events-none z-20">
-            <div 
-              className="text-xs font-semibold px-3 py-1.5 rounded-md backdrop-blur-sm border"
-              style={{ 
-                background: `${item.brandColor || '#C9901A'}20`,
-                color: item.brandColor || "#C9901A",
-                borderColor: `${item.brandColor || '#C9901A'}40`,
-                boxShadow: `0 2px 8px ${item.brandColor || '#C9901A'}30`
-              }}
-            >
-              Click for details
-            </div>
-          </div>
-          {/* Click indicator removed - keeping focus on logo visibility */}
-        </li>
-      ))}
+          </li>
+        );
+      })}
     </ul>
   );
 });

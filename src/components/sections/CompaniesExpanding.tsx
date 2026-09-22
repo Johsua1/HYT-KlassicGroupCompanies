@@ -111,8 +111,8 @@ export function CompaniesExpanding() {
           </p>
         </div>
 
-        {/* Category Filter Buttons - Improved Design */}
-        <div className="flex flex-wrap justify-center gap-2 mb-12 px-4">
+        {/* Category Filter Buttons - Premium Design */}
+        <div className="flex flex-wrap justify-center gap-3 mb-12 px-4">
           {categories.map((category) => {
             const isActive = selectedCategory === category.slug;
             const count = category.slug === "all" 
@@ -123,72 +123,84 @@ export function CompaniesExpanding() {
               <button
                 key={category.slug}
                 onClick={() => setSelectedCategory(category.slug)}
-                className="group px-4 py-2.5 rounded-xl text-sm font-semibold transition-all duration-200 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                className="group relative px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                 style={{
                   background: isActive ? GOLD_GRAD : "#fff",
                   color: isActive ? "#fff" : DARK,
                   borderColor: isActive ? GOLD : BORDER,
                   fontFamily: "var(--font-display)",
-                  boxShadow: isActive ? `0 4px 16px ${GOLD}40` : "0 2px 8px rgba(0,0,0,0.05)",
+                  boxShadow: isActive ? `0 8px 24px ${GOLD}50, 0 4px 12px ${GOLD}30` : "0 2px 8px rgba(0,0,0,0.04)",
                 }}
                 disabled={count === 0}
+                aria-pressed={isActive}
               >
-                <span className="flex items-center gap-2">
+                <span className="flex items-center gap-2.5">
                   {category.label}
                   <span 
-                    className="text-xs px-2 py-0.5 rounded-full transition-colors"
+                    className="text-xs font-bold px-2.5 py-0.5 rounded-full transition-all duration-300"
                     style={{
-                      background: isActive ? "rgba(255,255,255,0.25)" : "rgba(201,144,26,0.1)",
-                      color: isActive ? "white" : GOLD_DARK
+                      background: isActive ? "rgba(255,255,255,0.3)" : "rgba(201,144,26,0.12)",
+                      color: isActive ? "white" : GOLD_DARK,
+                      minWidth: "28px",
+                      textAlign: "center"
                     }}
                   >
                     {count}
                   </span>
                 </span>
+                
+                {/* Active indicator dot */}
+                {isActive && (
+                  <div 
+                    className="absolute -top-1 -right-1 w-2.5 h-2.5 rounded-full animate-pulse"
+                    style={{ background: "#fff", boxShadow: "0 0 8px rgba(255,255,255,0.8)" }}
+                  />
+                )}
               </button>
             );
           })}
         </div>
 
-        {/* Companies Display - Desktop: Expanding Cards, Mobile: Simple Card List */}
+        {/* Companies Display - Same Design, Different Behavior */}
         {filteredCompanies.length > 0 ? (
           <>
-            {/* Desktop View - Expanding Cards */}
+            {/* Desktop View - Expanding Cards Slider */}
             <div className="hidden md:flex justify-center">
               <ExpandingCards 
                 items={cardItems}
                 onCardClick={handleCardClick}
                 showVerticalPattern={selectedCategory === "all"}
                 showCategoryText={selectedCategory === "all"}
+                disableHover={selectedCategory !== "all"} // NEW: Disable hover on category filters
+                defaultExpanded={selectedCategory !== "all"} // NEW: All cards expanded on category filters
               />
             </div>
 
-            {/* Mobile & Tablet View - Responsive Animated Card Grid */}
+            {/* Mobile & Tablet View - Simple Card Grid */}
             <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
               {filteredCompanies.map((company, index) => {
-                // Get brand color for glow effect
                 const brandColor = companyBrandColors[company.id] || GOLD;
-                console.log('Company glow:', company.name, 'Color:', brandColor);
                 
                 return (
                   <div
                     key={company.id}
-                    className="bg-white rounded-xl border shadow-sm hover:shadow-lg active:scale-[0.98] cursor-pointer overflow-hidden transform transition-all duration-300"
+                    className="bg-white rounded-xl border-2 shadow-sm hover:shadow-lg active:scale-[0.98] cursor-pointer overflow-hidden transform transition-all duration-300"
                     style={{ 
                       borderColor: BORDER,
                       animation: `slideInUp 0.5s ease-out ${index * 0.1}s both`,
                     }}
-                    onClick={() => setSelectedCompany(company)}
+                    onClick={() => {
+                      const companyWithBrandColor = {
+                        ...company,
+                        brandColor: companyBrandColors[company.id] || GOLD
+                      };
+                      setSelectedCompany(companyWithBrandColor);
+                    }}
                   >
-                    {/* Category Badge with slide-in animation */}
-                    <div 
-                      className="px-4 pt-4 pb-2"
-                      style={{
-                        animation: `fadeInRight 0.6s ease-out ${index * 0.1 + 0.2}s both`
-                      }}
-                    >
+                    {/* Category Badge */}
+                    <div className="px-4 pt-4 pb-2">
                       <span 
-                        className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md transition-all duration-200 hover:scale-105"
+                        className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
                         style={{ 
                           background: GOLD_TINT,
                           color: GOLD_DARK
@@ -198,32 +210,22 @@ export function CompaniesExpanding() {
                       </span>
                     </div>
 
-                    {/* Company Logo with scale animation and glow effect */}
-                    <div 
-                      className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8 transition-all duration-300"
-                      style={{
-                        animation: `scaleIn 0.6s ease-out ${index * 0.1 + 0.3}s both`
-                      }}
-                    >
+                    {/* Company Logo */}
+                    <div className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8">
                       <img
                         src={company.image}
                         alt={company.name}
                         className="h-20 w-auto object-contain transition-transform duration-300 hover:scale-110"
                         style={{
-                          filter: `drop-shadow(0 0 30px ${brandColor}99) drop-shadow(0 0 50px ${brandColor}66) drop-shadow(0 0 70px ${brandColor}33)`
+                          filter: `drop-shadow(0 4px 20px ${brandColor}40)`
                         }}
                       />
                     </div>
 
-                    {/* Company Info with fade-up animation */}
-                    <div 
-                      className="px-4 pb-4"
-                      style={{
-                        animation: `fadeInUp 0.6s ease-out ${index * 0.1 + 0.4}s both`
-                      }}
-                    >
+                    {/* Company Info */}
+                    <div className="px-4 pb-4">
                       <h3 
-                        className="text-lg font-bold mb-1 transition-all duration-200"
+                        className="text-lg font-bold mb-1"
                         style={{ 
                           color: DARK, 
                           fontFamily: "var(--font-display)"
@@ -231,41 +233,31 @@ export function CompaniesExpanding() {
                       >
                         {company.name}
                       </h3>
-                      <p className="text-sm transition-colors duration-200" style={{ color: SLATE }}>
+                      <p className="text-sm" style={{ color: SLATE }}>
                         {company.tagline}
                       </p>
-                    </div>
-
-                    {/* Tap indicator - subtle pulse */}
-                    <div 
-                      className="absolute bottom-2 right-2 w-8 h-8 rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                      style={{ 
-                        background: `${GOLD}20`,
-                        animation: 'pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite'
-                      }}
-                    >
-                      <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M6 12L10 8L6 4" stroke={GOLD} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                      </svg>
                     </div>
                   </div>
                 );
               })}
             </div>
 
-            {/* Call to Action - Improved messaging */}
-            <div className="text-center mt-12 space-y-2">
-              <p className="text-sm font-medium" style={{ color: DARK }}>
+            {/* Call to Action */}
+            <div className="text-center mt-12 space-y-3">
+              <p className="text-base font-semibold" style={{ color: DARK }}>
                 {selectedCategory === "all" 
-                  ? `Viewing all ${filteredCompanies.length} companies across ${categories.length - 1} industries`
-                  : `${filteredCompanies.length} ${filteredCompanies.length === 1 ? 'company' : 'companies'} in ${categories.find(c => c.slug === selectedCategory)?.label}`
+                  ? `Explore All ${filteredCompanies.length} Companies Across ${categories.length - 1} Industries`
+                  : `${filteredCompanies.length} ${filteredCompanies.length === 1 ? 'Company' : 'Companies'} in ${categories.find(c => c.slug === selectedCategory)?.label}`
                 }
               </p>
-              <p className="text-xs hidden md:block" style={{ color: SLATE }}>
-                Hover to preview • Click any card to view full details and social links
+              <p className="text-sm hidden md:block" style={{ color: SLATE }}>
+                {selectedCategory === "all"
+                  ? "Hover over any company to preview • Click to view full details"
+                  : "All companies expanded • Click any card to view full details"
+                }
               </p>
-              <p className="text-xs md:hidden" style={{ color: SLATE }}>
-                Tap any card to view full details and social links
+              <p className="text-sm md:hidden" style={{ color: SLATE }}>
+                Tap any company to view full details
               </p>
             </div>
           </>

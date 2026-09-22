@@ -7,6 +7,7 @@ export interface Company {
   description: string;
   services: string[];
   image: string;
+  contactImage?: string; // NEW: Different image for Contact Us page
   website: string;
   facebook?: string;
   instagram?: string;

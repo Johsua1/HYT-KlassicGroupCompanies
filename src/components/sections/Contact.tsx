@@ -136,7 +136,7 @@ export function Contact() {
       id: c.id,
       name: c.name,
       tagline: c.tagline,
-      image: c.image,
+      image: c.contactImage || c.image, // Use contactImage if available, otherwise use regular image
     })),
     {
       id: "general",

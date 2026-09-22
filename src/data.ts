@@ -7,8 +7,10 @@ import KlassicMarketingImg from "./assets/images/KlassicMarketing.png";
 import WDCImg from "./assets/images/WDC.png";
 import WestWoodLawImg from "./assets/images/WestWoodLawFirm.png";
 import ConnectorImg from "./assets/images/Connector.png";
+import ConnectoImg from "./assets/images/Connecto.png";
 import GreenOasisImg from "./assets/images/TheGreenOasis.png";
 import LuxuriousCleaningImg from "./assets/images/LuxuriousCleaningCo.png";
+import LCCImg from "./assets/images/LCC.png";
 import HYTImg from "./assets/images/HYT.png";
 import FinestFitImg from "./assets/images/TheFinestFit.jpg";
 
@@ -109,6 +111,7 @@ export const companies: Company[] = [
       "Connector is a system designed as a modular software system that aims to integrate the main functional areas of an organization's business processes into a unified system.",
     services: ["ERP Integration", "Business Process Automation", "Modular Software", "Systems Connectivity"],
     image: ConnectorImg,
+    contactImage: ConnectoImg,
     website: "https://connectorcore.com/Connector-Website-master/",
     facebook: "https://www.facebook.com/connectormode",
     instagram: "https://www.instagram.com/connector.mode/",
@@ -139,6 +142,7 @@ export const companies: Company[] = [
       "Luxurious Cleaning Co. introduced itself in the cleaning industry in September 2019. Although new in the game, it gained TRUST and a STRONG POOL OF CLIENTS through consistent quality service.",
     services: ["Residential Cleaning", "Commercial Cleaning", "Deep Cleaning", "Janitorial Services"],
     image: LuxuriousCleaningImg,
+    contactImage: LCCImg,
     website: "https://connectorcore.com/Luxurious-Cleaning-Website-master",
     facebook: "https://www.facebook.com/luxuriouscleaningph",
     instagram: "https://www.instagram.com/luxuriouscleaningco/",

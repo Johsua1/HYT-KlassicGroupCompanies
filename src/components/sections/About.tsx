@@ -1,3 +1,4 @@
+import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, MUTED, BORDER } from "@/constants/colors";
 import KGCTeamImage from "@/assets/images/KGC.jpg";
@@ -7,14 +8,96 @@ import KlassicSolutionsLogo from "@/assets/images/KlassicSolutions.png";
 import KlassicMarketingLogo from "@/assets/images/KlassicMarketing.png";
 import WDCLogo from "@/assets/images/WDC.png";
 import WestWoodLawLogo from "@/assets/images/WestWoodLawFirm.png";
+import HYTLogo from "@/assets/images/HYT.png";
+import LuxuriousCleaningLogo from "@/assets/images/LuxuriousCleaningCo.png";
+
+// Animated Counter Component
+function AnimatedCounter({ 
+  value, 
+  duration = 2000 
+}: { 
+  value: string; 
+  duration?: number; 
+}) {
+  const [displayValue, setDisplayValue] = useState(value);
+  const [hasAnimated, setHasAnimated] = useState(false);
+  const ref = useRef<HTMLSpanElement>(null);
+
+  // Parse the numeric value and suffix (e.g., "10+" -> 10 and "+", "99%" -> 99 and "%")
+  const match = value.match(/^(\d+)(.*)$/);
+  const targetNumber = match ? parseInt(match[1], 10) : 0;
+  const suffix = match ? match[2] : value;
+
+  useEffect(() => {
+    // Intersection Observer to trigger animation when element is visible
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setHasAnimated(true);
+          
+          if (targetNumber === 0) {
+            // Non-numeric value, just show it
+            setDisplayValue(value);
+            return;
+          }
+          
+          // Easing function for smooth deceleration
+          const easeOutQuart = (t: number): number => 1 - Math.pow(1 - t, 4);
+          
+          const startTime = Date.now();
+          const animate = () => {
+            const elapsed = Date.now() - startTime;
+            const progress = Math.min(elapsed / duration, 1);
+            const easedProgress = easeOutQuart(progress);
+            
+            const currentCount = Math.floor(easedProgress * targetNumber);
+            setDisplayValue(`${currentCount}${suffix}`);
+            
+            if (progress < 1) {
+              requestAnimationFrame(animate);
+            }
+          };
+          
+          requestAnimationFrame(animate);
+        }
+      },
+      { threshold: 0.3 } // Trigger when 30% of element is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => {
+      if (ref.current) {
+        observer.unobserve(ref.current);
+      }
+    };
+  }, [targetNumber, duration, hasAnimated, value, suffix]);
+
+  return (
+    <span 
+      ref={ref}
+      className="text-4xl font-bold md:text-5xl transition-all duration-300"
+      style={{ 
+        color: DARK,
+        fontFamily: "var(--font-display)"
+      }}
+    >
+      {displayValue}
+    </span>
+  );
+}
 
 export function About() {
   const companies = [
-    { src: BrainsLogo, alt: "Brains Infinite Innovations" },
-    { src: KlassicSolutionsLogo, alt: "Klassic Solutions" },
-    { src: KlassicMarketingLogo, alt: "Klassic Marketing" },
-    { src: WDCLogo, alt: "Westwood Development Corporation" },
-    { src: WestWoodLawLogo, alt: "Westwood Law Firm" },
+    { src: BrainsLogo, alt: "Brains Infinite Innovations", link: "https://www.brains.asia/" },
+    { src: KlassicSolutionsLogo, alt: "Klassic Solutions", link: "https://connectorcore.com/Klassic-Solutions-PH-master/" },
+    { src: KlassicMarketingLogo, alt: "Klassic Marketing", link: "https://connectorcore.com/Klassic-Marketing-Inc-Website-master" },
+    { src: WDCLogo, alt: "Westwood Development Corporation", link: "https://connectorcore.com/Westwood-Development-Corp-Website-master/" },
+    { src: WestWoodLawLogo, alt: "Westwood Law Firm", link: "https://westwood-law-firm.vercel.app/" },
+    { src: HYTLogo, alt: "HYT Foundation", link: "https://hyt-foundation-inc.vercel.app/" },
+    { src: LuxuriousCleaningLogo, alt: "Luxurious Cleaning Co.", link: "https://luxurious-cleaning-co.vercel.app/" },
   ];
 
   const achievements = [
@@ -116,13 +199,20 @@ export function About() {
           </p>
           <div className="mt-8 flex flex-wrap justify-center gap-8">
             {companies.map((company, idx) => (
-              <div className="flex items-center gap-3" key={company.src + idx}>
+              <a
+                key={company.src + idx}
+                href={company.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="flex items-center gap-3 group cursor-pointer"
+                aria-label={`Visit ${company.alt}`}
+              >
                 <img
                   src={company.src}
                   alt={company.alt}
-                  className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-opacity"
+                  className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-all duration-300 group-hover:scale-110"
                 />
-              </div>
+              </a>
             ))}
           </div>
         </div>
@@ -144,15 +234,7 @@ export function About() {
             {achievements.map((item, idx) => (
               <div className="flex flex-col gap-4" key={item.label + idx}>
                 <p className="font-medium" style={{ color: SLATE }}>{item.label}</p>
-                <span 
-                  className="text-4xl font-bold md:text-5xl"
-                  style={{ 
-                    color: DARK,
-                    fontFamily: "var(--font-display)"
-                  }}
-                >
-                  {item.value}
-                </span>
+                <AnimatedCounter value={item.value} duration={2000} />
               </div>
             ))}
           </div>
