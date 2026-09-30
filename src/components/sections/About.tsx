@@ -10,6 +10,8 @@ import WDCLogo from "@/assets/images/WDC.png";
 import WestWoodLawLogo from "@/assets/images/WestWoodLawFirm.png";
 import HYTLogo from "@/assets/images/HYT.png";
 import LuxuriousCleaningLogo from "@/assets/images/LuxuriousCleaningCo.png";
+import LevelUpLogo from "@/assets/images/LEVELUPLOGO.png";
+import HYTGlobalInstituteLogo from "@/assets/images/HGI.png";
 
 // Animated Counter Component
 function AnimatedCounter({ 
@@ -98,6 +100,8 @@ export function About() {
     { src: WestWoodLawLogo, alt: "Westwood Law Firm", link: "https://westwood-law-firm.vercel.app/" },
     { src: HYTLogo, alt: "HYT Foundation", link: "https://hyt-foundation-inc.vercel.app/" },
     { src: LuxuriousCleaningLogo, alt: "Luxurious Cleaning Co.", link: "https://luxurious-cleaning-co.vercel.app/" },
+    { src: LevelUpLogo, alt: "Level Up", link: "https://levelupinternational.net/" },
+    { src: HYTGlobalInstituteLogo, alt: "HYT Global Institute Inc.", link: "https://hytglobalinstitute.com/" },
   ];
 
   const achievements = [

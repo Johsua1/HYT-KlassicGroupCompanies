@@ -13,6 +13,8 @@ import LuxuriousCleaningImg from "./assets/images/LuxuriousCleaningCo.png";
 import LCCImg from "./assets/images/LCC.png";
 import HYTImg from "./assets/images/HYT.png";
 import FinestFitImg from "./assets/images/TheFinestFit.jpg";
+import LevelUpImg from "./assets/images/LEVELUPLOGO.png";
+import HYTGlobalInstituteImg from "./assets/images/HGI.png";
 
 export const categories: Category[] = [
   { label: "All",                    slug: "all" },
@@ -22,6 +24,7 @@ export const categories: Category[] = [
   { label: "Construction",           slug: "construction" },
   { label: "Professional Services",  slug: "professional" },
   { label: "Other Services",         slug: "other" },
+  { label: "Education & Training",   slug: "education" },
   { label: "Foundation",             slug: "foundation" },
 ];
 
@@ -176,6 +179,34 @@ export const companies: Company[] = [
     website: "https://connectorcore.com/The-Finest-Fit-Website-master/",
     facebook: "https://www.facebook.com/thefinestfit",
     instagram: "https://www.instagram.com/connector.mode/",
+    youtube: "#",
+  },
+  {
+    id: "level-up",
+    name: "Level Up International Manpower Services Corp.",
+    category: "Business & Manpower Services",
+    categorySlug: "business-services",
+    tagline: "Matching Filipino talent with global opportunity",
+    description:
+      "Level Up International Manpower Services Corp. is a workforce solutions provider specializing in recruiting, training, and deploying skilled Filipino workers to international clients, offering tailored manpower solutions for businesses across the globe.",
+    services: ["Talent Sourcing & Assessment", "Training & Development", "Workforce Consulting", "Outsourcing", "Career Management"],
+    image: LevelUpImg,
+    website: "https://levelupinternational.net/",
+    facebook: "#",
+    youtube: "#",
+  },
+  {
+    id: "hyt-global-institute",
+    name: "HYT Global Institute Inc.",
+    category: "Education & Training",
+    categorySlug: "education",
+    tagline: "Your pathway to global excellence",
+    description:
+      "HYT Global Institute Inc. is a TESDA-accredited training institution dedicated to transforming individuals into industry-ready professionals, leaders, and changemakers through industry-certified instruction, modern facilities, and global deployment partnerships.",
+    services: ["Hospitality & Food Service", "Healthcare & Wellness", "IT & Cybersecurity", "Bookkeeping & Accounting"],
+    image: HYTGlobalInstituteImg,
+    website: "https://hytglobalinstitute.com/",
+    facebook: "https://www.facebook.com/profile.php?id=61578797258858",
     youtube: "#",
   },
 ];

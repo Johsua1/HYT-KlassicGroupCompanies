@@ -10,6 +10,8 @@ import {
   Sparkles,
   GraduationCap,
   Shirt,
+  Globe,
+  BookOpen,
   ExternalLink
 } from "lucide-react";
 import { ExpandingCards, type CardItem } from "@/components/ui/ExpandingCards";
@@ -29,6 +31,8 @@ const companyIcons: Record<string, React.ReactNode> = {
   "luxurious-cleaning": <Sparkles size={28} />,
   "hyt-foundation": <GraduationCap size={28} />,
   "finest-fit": <Shirt size={28} />,
+  "level-up": <Globe size={28} />,
+  "hyt-global-institute": <BookOpen size={28} />,
 };
 
 // Map company IDs to their brand colors for dynamic glow effects
@@ -43,6 +47,8 @@ const companyBrandColors: Record<string, string> = {
   "luxurious-cleaning": "#FFD93D",     // Bright Gold-Yellow (luxury, stands out)
   "hyt-foundation": "#FFB84D",         // Warm Gold (consistent with foundation branding)
   "finest-fit": "#FFFFFF",             // Pure White (replaces black for visibility on black background)
+  "level-up": "#38BDF8",               // Sky Blue (global, forward-looking)
+  "hyt-global-institute": "#C084FC",   // Purple (academic, premium)
   "kgcc": "#FFB84D",                   // Warm Gold (Klassic brand, premium feel)
 };
 
@@ -93,7 +99,7 @@ export function CompaniesExpanding() {
 
   return (
     <section id="companies" className="py-24" style={{ background: "#fff" }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+      <div className="max-w-[1460px] mx-auto px-6 lg:px-8">
         {/* Header */}
         <div className="text-center max-w-3xl mx-auto mb-12">
           <div

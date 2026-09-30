@@ -16,6 +16,8 @@ const COMPANY_EMAILS: Record<string, string> = {
   "luxurious-cleaning": "bol76335@gmail.com",
   "hyt-foundation": "bol76335@gmail.com",
   "finest-fit": "bol76335@gmail.com",
+  "level-up": "bol76335@gmail.com",
+  "hyt-global-institute": "bol76335@gmail.com",
   "general": "bol76335@gmail.com",
 };
 
@@ -31,6 +33,8 @@ const COMPANY_COLORS: Record<string, string> = {
   "luxurious-cleaning": "#FFD93D",
   "hyt-foundation": "#FFB84D",
   "finest-fit": "#1A1A1A", // Changed to dark color for visibility
+  "level-up": "#38BDF8",
+  "hyt-global-institute": "#C084FC",
   "general": GOLD,
 };
 
@@ -46,6 +50,8 @@ const COMPANY_LOGO_URLS: Record<string, string> = {
   "luxurious-cleaning": "https://i.imgur.com/F4gKGdd.png",
   "hyt-foundation": "https://i.imgur.com/ACnsLKr.png",
   "finest-fit": "https://i.imgur.com/99v7itv.png",
+  "level-up": "https://imgur.com/AL9ohZf.png",
+  "hyt-global-institute": "https://imgur.com/a/KL744sI",
   "general": "https://i.imgur.com/Y7nyCv8.png", // KGC logo for general inquiry
 };
 
