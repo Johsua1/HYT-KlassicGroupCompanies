@@ -1,6 +1,6 @@
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/ui/Icons";
 import { GOLD_GRAD, GOLD, GOLD_LIGHT, MUTED } from "@/constants/colors";
-import logoImg from "@/assets/images/KlassicGroupCompanies.png";
+import logoImg from "@/assets/images/KGCLOGO.jpg";
 
 export function Footer() {
   const links: Record<string, Array<{ label: string; href: string }>> = {
