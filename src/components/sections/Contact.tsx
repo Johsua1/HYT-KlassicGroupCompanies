@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import emailjs from '@emailjs/browser';
 import { MapPinIcon, MailIcon, PhoneIcon, ClockIcon, FacebookIcon, InstagramIcon, YoutubeIcon, LinkedinIcon, CheckIcon } from "@/components/ui/Icons";
+import { Loader2, Send, PartyPopper } from "lucide-react";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, CHARCOAL, SLATE, MUTED, BORDER } from "@/constants/colors";
 import { companies } from "@/data";
 
@@ -210,7 +211,7 @@ export function Contact() {
               border: `1px solid ${GOLD}30`,
             }}
           >
-            ✉️ Get In Touch
+            <MailIcon size={14} /> Get In Touch
           </div>
           <h2 
             className="text-4xl lg:text-5xl font-bold mb-4" 
@@ -535,14 +536,14 @@ export function Contact() {
                 >
                   {loading ? (
                     <span className="flex items-center justify-center gap-2">
-                      <svg className="animate-spin h-5 w-5" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                      </svg>
+                      <Loader2 className="animate-spin h-5 w-5" />
                       Sending...
                     </span>
                   ) : (
-                    'Send Message ✉️'
+                    <span className="flex items-center justify-center gap-2">
+                      Send Message
+                      <Send size={18} />
+                    </span>
                   )}
                 </button>
 
@@ -581,13 +582,14 @@ export function Contact() {
             </div>
             
             <h3 
-              className="text-3xl font-bold mb-4" 
+              className="text-3xl font-bold mb-4 flex items-center justify-center gap-2" 
               style={{ 
                 color: DARK, 
                 fontFamily: "var(--font-display)" 
               }}
             >
-              Message Sent Successfully! 🎉
+              Message Sent Successfully!
+              <PartyPopper size={28} color={selectedCompanyColor} />
             </h3>
             
             <p className="text-lg mb-8" style={{ color: SLATE }}>

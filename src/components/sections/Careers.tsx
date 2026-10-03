@@ -1,12 +1,13 @@
+import { Rocket, Globe, Briefcase, GraduationCap } from "lucide-react";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { GOLD, GOLD_LIGHT, GOLD_GRAD, DARK_GRAD, MUTED } from "@/constants/colors";
 
 export function Careers() {
   const perks = [
-    { icon: "🚀", title: "Career Growth",   desc: "Structured development paths across 10+ companies and 7 industries." },
-    { icon: "🌍", title: "Nationwide Reach", desc: "Work with teams and clients from across the Philippines." },
-    { icon: "💼", title: "Diverse Roles",    desc: "Openings in technology, marketing, legal, operations, and more." },
-    { icon: "🎓", title: "Learning Culture", desc: "Training programs, mentorships, and internship opportunities for students." },
+    { icon: <Rocket size={24} />, title: "Career Growth",   desc: "Structured development paths across 10+ companies and 7 industries." },
+    { icon: <Globe size={24} />, title: "Nationwide Reach", desc: "Work with teams and clients from across the Philippines." },
+    { icon: <Briefcase size={24} />, title: "Diverse Roles",    desc: "Openings in technology, marketing, legal, operations, and more." },
+    { icon: <GraduationCap size={24} />, title: "Learning Culture", desc: "Training programs, mentorships, and internship opportunities for students." },
   ];
 
   return (
@@ -47,7 +48,7 @@ export function Careers() {
           <div className="grid sm:grid-cols-2 gap-4">
             {perks.map(p => (
               <div key={p.title} className="p-5 rounded-xl space-y-3" style={{ background: "#1F2937", border: "1px solid #2D3748" }}>
-                <div className="text-2xl">{p.icon}</div>
+                <div style={{ color: GOLD_LIGHT }}>{p.icon}</div>
                 <div className="font-semibold text-white text-sm" style={{ fontFamily: "var(--font-display)" }}>{p.title}</div>
                 <p className="text-xs leading-relaxed" style={{ color: MUTED }}>{p.desc}</p>
               </div>
