@@ -25,15 +25,20 @@ export function Footer() {
   };
 
   const socialLinks = [
-    { 
-      icon: <FacebookIcon size={17} />, 
-      label: "Facebook", 
-      href: "https://www.facebook.com/profile.php?id=61554025331986" 
+    {
+      icon: <FacebookIcon size={17} />,
+      label: "Facebook",
+      href: "https://www.facebook.com/profile.php?id=61554025331986",
     },
-    { 
-      icon: <YoutubeIcon size={17} />, 
-      label: "YouTube", 
-      href: "https://www.youtube.com/watch?v=8BFhdINS97w" 
+    {
+      icon: <InstagramIcon size={17} />,
+      label: "Instagram",
+      href: "https://www.instagram.com/klassicgroupofcompanies/",
+    },
+    {
+      icon: <YoutubeIcon size={17} />,
+      label: "YouTube",
+      href: "https://www.youtube.com/watch?v=8BFhdINS97w",
     },
   ];
 
