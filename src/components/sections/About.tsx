@@ -94,7 +94,7 @@ function AnimatedCounter({
 export function About() {
   const companies = [
     { src: BrainsLogo, alt: "Brains Infinite Innovations", link: "https://www.brains.asia/" },
-    { src: KlassicSolutionsLogo, alt: "Klassic Solutions", link: "https://connectorcore.com/Klassic-Solutions-PH-master/" },
+    { src: KlassicSolutionsLogo, alt: "Klassic Solutions", link: "https://klassic-attendance.vercel.app/" },
     { src: KlassicMarketingLogo, alt: "Klassic Marketing", link: "https://connectorcore.com/Klassic-Marketing-Inc-Website-master" },
     { src: WDCLogo, alt: "Westwood Development Corporation", link: "https://connectorcore.com/Westwood-Development-Corp-Website-master/" },
     { src: WestWoodLawLogo, alt: "Westwood Law Firm", link: "https://westwood-law-firm.vercel.app/" },
