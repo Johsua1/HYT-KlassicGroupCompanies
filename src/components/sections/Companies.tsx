@@ -16,7 +16,7 @@ const companyBrandColors: Record<string, string> = {
   "green-oasis": "#4ADE80",
   "luxurious-cleaning": "#FFD93D",
   "hyt-foundation": "#FFB84D",
-  "finest-fit": "#FFFFFF",
+  "millennium": "#D2D2D2",
   "kgcc": "#FFB84D",
 };
 

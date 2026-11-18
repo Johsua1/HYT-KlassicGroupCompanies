@@ -8,6 +8,8 @@ export interface Company {
   services: string[];
   image: string;
   contactImage?: string; // NEW: Different image for Contact Us page
+  darkLogo?: boolean; // Light logo artwork (silver/white) that needs darkening on light surfaces
+  wordmark?: boolean; // Logo is the company name itself, so the text heading would duplicate it
   website: string;
   facebook?: string;
   instagram?: string;

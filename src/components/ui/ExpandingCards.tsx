@@ -19,6 +19,7 @@ export interface CardItem {
   services?: string[];
   category?: string;
   brandColor?: string;
+  hideTitle?: boolean; // Logo already carries the name (wordmark brands)
 }
 
 interface ExpandingCardsProps extends React.HTMLAttributes<HTMLUListElement> {
@@ -34,9 +35,11 @@ interface ExpandingCardsProps extends React.HTMLAttributes<HTMLUListElement> {
 const DEFAULT_BRAND = "#C9901A";
 
 // Shared timing so the width growth and the content reveal stay in sync.
-// (Width growth is 320ms via the `duration-[320ms]` class on the <ul>.)
-const REVEAL_DELAY_MS = 60; // small head-start so the card is already opening
-const STAGGER_MS = 30;      // quick per-item cascade inside the expanded card
+// (Width growth is 700ms via the `duration-[700ms]` class on the <ul>;
+//  the fade itself is 380ms, set on the reveal classes.)
+const REVEAL_START_MS = 300; // content starts once the card has opened enough
+const REVEAL_STEP_MS = 60;   // gap between the logo / text / actions groups
+const HOVER_OUT_DELAY_MS = 140; // grace period so crossing a gap does not collapse
 
 export const ExpandingCards = React.forwardRef<
   HTMLUListElement,
@@ -55,6 +58,7 @@ export const ExpandingCards = React.forwardRef<
   const [activeIndex, setActiveIndex] = React.useState<number | null>(null);
   const [isDesktop, setIsDesktop] = React.useState(false);
   const [imageLoadStates, setImageLoadStates] = React.useState<Record<string | number, boolean>>({});
+  const closeTimer = React.useRef<number | null>(null);
 
   React.useEffect(() => {
     const handleResize = () => {
@@ -64,6 +68,15 @@ export const ExpandingCards = React.forwardRef<
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  const clearCloseTimer = React.useCallback(() => {
+    if (closeTimer.current !== null) {
+      window.clearTimeout(closeTimer.current);
+      closeTimer.current = null;
+    }
+  }, []);
+
+  React.useEffect(() => clearCloseTimer, [clearCloseTimer]);
 
   const gridStyle = React.useMemo(() => {
     const build = (get: (index: number) => string) =>
@@ -88,8 +101,21 @@ export const ExpandingCards = React.forwardRef<
 
   const handleInteraction = (index: number) => {
     if (!disableHover) {
+      clearCloseTimer();
       setActiveIndex(index);
     }
+  };
+
+  // Hover-out uses a short intent delay: crossing the gutter between two cards
+  // must not collapse the row, otherwise the neighbour slides away from the
+  // cursor. Entering another card cancels the pending shrink.
+  const handleCardLeave = () => {
+    if (disableHover) return;
+    clearCloseTimer();
+    closeTimer.current = window.setTimeout(() => {
+      closeTimer.current = null;
+      setActiveIndex(null);
+    }, HOVER_OUT_DELAY_MS);
   };
 
   const handleCardClick = (item: CardItem, e: React.MouseEvent) => {
@@ -123,8 +149,10 @@ export const ExpandingCards = React.forwardRef<
         "w-full max-w-full gap-2",
         "grid",
         "h-[600px] md:h-[500px]",
-        "motion-reduce:transition-none",
-        !defaultExpanded && "transition-[grid-template-columns,grid-template-rows] duration-[320ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[grid-template-columns]",
+        // Reduced motion keeps a short, even transition instead of snapping:
+        // no abrupt size jump, but far less travel time for motion-sensitive users.
+        "motion-reduce:duration-[320ms] motion-reduce:ease-out",
+        !defaultExpanded && "transition-[grid-template-columns,grid-template-rows] duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] will-change-[grid-template-columns]",
         className,
       )}
       style={{
@@ -135,6 +163,14 @@ export const ExpandingCards = React.forwardRef<
         )
       }}
       ref={ref}
+      // Leaving the row (not a single card) collapses immediately — the intent
+      // delay is only there to absorb travel across the gutter between cards.
+      onMouseLeave={() => {
+        if (!disableHover) {
+          clearCloseTimer();
+          setActiveIndex(null);
+        }
+      }}
       {...props}
     >
       {items.map((item, index) => {
@@ -143,17 +179,21 @@ export const ExpandingCards = React.forwardRef<
         const brand = item.brandColor || DEFAULT_BRAND;
         const loaded = !!imageLoadStates[item.id];
 
-        // Smart cascade: each element fades + slides in just after the card finishes growing.
-        // On collapse it disappears immediately (no delay) so the shrink reads cleanly.
+        // Reveal is grouped in three beats (logo → text → actions) instead of
+        // one delay per element: fewer steps read calmer and land as the width
+        // settles. Ease-out-cubic keeps the fade even — expo curves front-load
+        // opacity and leave a long, invisible tail.
+        // On collapse everything leaves immediately so the shrink reads cleanly.
         const revealCls = cn(
-          "transition-[opacity,transform] ease-out will-change-transform motion-reduce:transition-none",
+          "transition-[opacity,transform] will-change-[opacity,transform]",
+          "motion-reduce:translate-y-0 motion-reduce:duration-150 motion-reduce:ease-out",
           isActive
-            ? "opacity-100 translate-y-0 duration-200"
-            : "opacity-0 translate-y-2 duration-150"
+            ? "opacity-100 translate-y-0 duration-[380ms] ease-[cubic-bezier(0.33,1,0.68,1)]"
+            : "opacity-0 translate-y-3 duration-[180ms] ease-out"
         );
-        const stagger = (order: number): React.CSSProperties => ({
+        const revealDelay = (order: number): React.CSSProperties => ({
           transitionDelay: isActive && !defaultExpanded
-            ? `${REVEAL_DELAY_MS + order * STAGGER_MS}ms`
+            ? `${REVEAL_START_MS + order * REVEAL_STEP_MS}ms`
             : "0ms",
         });
 
@@ -164,7 +204,7 @@ export const ExpandingCards = React.forwardRef<
               "group relative cursor-pointer overflow-hidden rounded-2xl border bg-black text-white",
               "min-h-0 min-w-0",
               "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2",
-              "transition-[border-color,box-shadow] duration-[320ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:transition-none"
+              "transition-[border-color,box-shadow] duration-[700ms] ease-[cubic-bezier(0.4,0,0.2,1)] motion-reduce:duration-[320ms]"
             )}
             style={{
               borderColor: isActive ? `${brand}66` : "rgba(255,255,255,0.06)",
@@ -173,9 +213,7 @@ export const ExpandingCards = React.forwardRef<
                 : "0 4px 16px rgba(0,0,0,0.12)",
             }}
             onMouseEnter={() => handleInteraction(index)}
-            onMouseLeave={() => {
-              if (!disableHover) setActiveIndex(null);
-            }}
+            onMouseLeave={handleCardLeave}
             onFocus={() => handleInteraction(index)}
             onClick={(e) => {
               handleInteraction(index);
@@ -206,12 +244,12 @@ export const ExpandingCards = React.forwardRef<
               <div
                 className={cn(
                   "absolute inset-0 flex items-center justify-center p-2",
-                  "transition-[opacity,transform] ease-out will-change-transform motion-reduce:transition-none",
+                  "transition-[opacity,transform] ease-out will-change-transform motion-reduce:duration-150",
                   isActive
-                    ? "opacity-0 scale-90 duration-150"
-                    : "opacity-100 scale-100 duration-200"
+                    ? "opacity-0 scale-90 duration-200"
+                    : "opacity-100 scale-100 duration-300"
                 )}
-                style={{ transitionDelay: isActive ? "0ms" : "100ms" }}
+                style={{ transitionDelay: isActive ? "0ms" : "160ms" }}
               >
                 <img
                   src={item.imgSrc}
@@ -241,7 +279,7 @@ export const ExpandingCards = React.forwardRef<
               <div
                 className={cn(
                   "pointer-events-none absolute inset-0 transition-opacity ease-out motion-reduce:transition-none",
-                  isActive ? "opacity-100 duration-300" : "opacity-0 duration-150"
+                  isActive ? "opacity-100 duration-[450ms]" : "opacity-0 duration-250"
                 )}
                 style={{
                   background: `radial-gradient(circle at 50% 28%, ${brand}40 0%, transparent 62%)`,
@@ -255,8 +293,9 @@ export const ExpandingCards = React.forwardRef<
                 </div>
               )}
 
-              {/* Content Container */}
-              <div className="relative z-10 flex w-full flex-col items-center gap-3">
+              {/* Content Container — fixed width so the copy does not re-wrap
+                  while the card is still animating its width */}
+              <div className="relative z-10 flex w-full max-w-[18rem] flex-col items-center gap-3">
                 {/* Company Logo - Large */}
                 <img
                   src={item.imgSrc}
@@ -268,116 +307,119 @@ export const ExpandingCards = React.forwardRef<
                   }}
                   className={cn(
                     revealCls,
-                    "w-auto h-auto max-h-[88px] max-w-[190px] object-contain",
+                    "w-auto h-auto max-h-[88px] max-w-[240px] object-contain",
                     !loaded && "opacity-0"
                   )}
                   style={{
                     filter: `drop-shadow(0 6px 22px ${brand}80)`,
-                    ...stagger(0),
+                    ...revealDelay(0),
                   }}
                   loading="lazy"
                 />
 
-                {/* Company Name */}
-                <h3
-                  className={cn(
-                    revealCls,
-                    "text-lg md:text-xl font-bold uppercase leading-tight tracking-wide [text-wrap:balance]"
-                  )}
-                  style={{
-                    color: brand,
-                    fontFamily: "var(--font-display)",
-                    textShadow: `0 2px 16px ${brand}59`,
-                    ...stagger(1),
-                  }}
+                {/* Company Name + Description — one beat, so the headline and
+                    its tagline arrive together instead of stepping separately */}
+                <div
+                  className={cn(revealCls, "flex w-full flex-col items-center gap-3")}
+                  style={revealDelay(1)}
                 >
-                  {item.title}
-                </h3>
+                  {!item.hideTitle && (
+                    <h3
+                      className="text-lg md:text-xl font-bold uppercase leading-tight tracking-wide [text-wrap:balance]"
+                      style={{
+                        color: brand,
+                        fontFamily: "var(--font-display)",
+                        textShadow: `0 2px 16px ${brand}59`,
+                      }}
+                    >
+                      {item.title}
+                    </h3>
+                  )}
 
-                {/* Description */}
-                <p
-                  className={cn(revealCls, "line-clamp-3 max-w-sm text-sm text-gray-300")}
-                  style={{
-                    fontFamily: "var(--font-body)",
-                    ...stagger(2),
-                  }}
-                >
-                  {item.description}
-                </p>
-
-                {/* Social Links */}
-                <div className={cn(revealCls, "flex items-center gap-2 pt-1")} style={stagger(3)}>
-                  {item.socialLinks?.facebook && (
-                    <a
-                      href={item.socialLinks.facebook}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`${item.title} Facebook`}
-                    >
-                      <FacebookIcon size={16} />
-                    </a>
-                  )}
-                  {item.socialLinks?.instagram && (
-                    <a
-                      href={item.socialLinks.instagram}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`${item.title} Instagram`}
-                    >
-                      <InstagramIcon size={16} />
-                    </a>
-                  )}
-                  {item.socialLinks?.youtube && item.socialLinks.youtube !== "#" && (
-                    <a
-                      href={item.socialLinks.youtube}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`${item.title} YouTube`}
-                    >
-                      <YoutubeIcon size={16} />
-                    </a>
-                  )}
-                  {item.linkHref && item.linkHref !== "#" && (
-                    <a
-                      href={item.linkHref}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
-                      onClick={(e) => e.stopPropagation()}
-                      aria-label={`Visit ${item.title} website`}
-                    >
-                      <ExternalLink size={16} />
-                    </a>
-                  )}
+                  <p
+                    className="line-clamp-3 max-w-sm text-sm text-gray-300"
+                    style={{ fontFamily: "var(--font-body)" }}
+                  >
+                    {item.description}
+                  </p>
                 </div>
 
-                {/* CTA Button */}
-                <button
-                  className={cn(
-                    revealCls,
-                    "mt-2 rounded-lg border px-6 py-2.5 text-sm font-semibold backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
-                  )}
-                  style={{
-                    background: `${brand}26`,
-                    color: brand,
-                    borderColor: `${brand}59`,
-                    boxShadow: `0 4px 14px ${brand}33`,
-                    ...stagger(4),
-                  }}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    if (onCardClick) onCardClick(item);
-                  }}
-                  aria-label={`View full details for ${item.title}`}
+                {/* Social links + CTA share one reveal wrapper, so the stagger
+                    delay only affects the fade-in and not their hover feedback */}
+                <div
+                  className={cn(revealCls, "flex w-full flex-col items-center gap-3")}
+                  style={revealDelay(2)}
                 >
-                  View Full Details
-                </button>
+                  {/* Social Links */}
+                  <div className="flex items-center gap-2 pt-1">
+                    {item.socialLinks?.facebook && (
+                      <a
+                        href={item.socialLinks.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`${item.title} Facebook`}
+                      >
+                        <FacebookIcon size={16} />
+                      </a>
+                    )}
+                    {item.socialLinks?.instagram && (
+                      <a
+                        href={item.socialLinks.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`${item.title} Instagram`}
+                      >
+                        <InstagramIcon size={16} />
+                      </a>
+                    )}
+                    {item.socialLinks?.youtube && item.socialLinks.youtube !== "#" && (
+                      <a
+                        href={item.socialLinks.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`${item.title} YouTube`}
+                      >
+                        <YoutubeIcon size={16} />
+                      </a>
+                    )}
+                    {item.linkHref && item.linkHref !== "#" && (
+                      <a
+                        href={item.linkHref}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex h-9 w-9 items-center justify-center rounded-lg border border-white/15 bg-white/10 text-white backdrop-blur-sm transition-all hover:scale-110 hover:bg-white/20"
+                        onClick={(e) => e.stopPropagation()}
+                        aria-label={`Visit ${item.title} website`}
+                      >
+                        <ExternalLink size={16} />
+                      </a>
+                    )}
+                  </div>
+
+                  {/* CTA Button */}
+                  <button
+                    className="mt-2 rounded-lg border px-6 py-2.5 text-sm font-semibold backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
+                    style={{
+                      background: `${brand}26`,
+                      color: brand,
+                      borderColor: `${brand}59`,
+                      boxShadow: `0 4px 14px ${brand}33`,
+                    }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      if (onCardClick) onCardClick(item);
+                    }}
+                    aria-label={`View full details for ${item.title}`}
+                  >
+                    View Full Details
+                  </button>
+                </div>
               </div>
             </div>
           </li>

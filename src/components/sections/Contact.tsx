@@ -16,7 +16,7 @@ const COMPANY_EMAILS: Record<string, string> = {
   "green-oasis": "bol76335@gmail.com",
   "luxurious-cleaning": "bol76335@gmail.com",
   "hyt-foundation": "bol76335@gmail.com",
-  "finest-fit": "bol76335@gmail.com",
+  "millennium": "bol76335@gmail.com",
   "level-up": "bol76335@gmail.com",
   "hyt-global-institute": "bol76335@gmail.com",
   "general": "bol76335@gmail.com",
@@ -33,7 +33,7 @@ const COMPANY_COLORS: Record<string, string> = {
   "green-oasis": "#4ADE80",
   "luxurious-cleaning": "#FFD93D",
   "hyt-foundation": "#FFB84D",
-  "finest-fit": "#1A1A1A", // Changed to dark color for visibility
+  "millennium": "#3F4750", // Steel tone so the silver brand stays legible on light surfaces
   "level-up": "#38BDF8",
   "hyt-global-institute": "#C084FC",
   "general": GOLD,
@@ -50,7 +50,7 @@ const COMPANY_LOGO_URLS: Record<string, string> = {
   "green-oasis": "https://i.imgur.com/tH9UEUe.png",
   "luxurious-cleaning": "https://i.imgur.com/F4gKGdd.png",
   "hyt-foundation": "https://i.imgur.com/ACnsLKr.png",
-  "finest-fit": "https://i.imgur.com/99v7itv.png",
+  "millennium": "https://millennium-brains.hytfoundationinterns-dreamacademy.workers.dev/assets/Logo%20Millennium%20Paltinum%20PNG-BYGspAuH.png",
   "level-up": "https://imgur.com/AL9ohZf.png",
   "hyt-global-institute": "https://imgur.com/a/KL744sI",
   "general": "https://i.imgur.com/Y7nyCv8.png", // KGC logo for general inquiry
@@ -144,12 +144,14 @@ export function Contact() {
       name: c.name,
       tagline: c.tagline,
       image: c.contactImage || c.image, // Use contactImage if available, otherwise use regular image
+      darkLogo: c.darkLogo,
     })),
     {
       id: "general",
       name: "General Inquiry",
       tagline: "For other questions or general information",
       image: null,
+      darkLogo: false,
     }
   ];
 
@@ -287,9 +289,13 @@ export function Contact() {
                           <img 
                             src={company.image} 
                             alt={company.name}
-                            className="h-12 w-auto object-contain transition-transform group-hover:scale-110"
+                            className="h-12 w-auto max-w-full object-contain transition-transform group-hover:scale-110"
                             style={{
-                              filter: isSelected ? `drop-shadow(0 0 8px ${companyColor}60)` : 'none'
+                              // Platinum wordmarks vanish on white cards — darken them here
+                              filter: [
+                                company.darkLogo ? "brightness(0.32)" : "",
+                                isSelected ? `drop-shadow(0 0 8px ${companyColor}60)` : "",
+                              ].filter(Boolean).join(" ") || "none"
                             }}
                           />
                         </div>

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, MUTED, BORDER } from "@/constants/colors";
 import KGCTeamImage from "@/assets/images/KGC.jpg";
-import KGCCLogo from "@/assets/images/KGCC.png";
+import KGCBackground from "@/assets/images/KGCbg.jpg";
 import BrainsLogo from "@/assets/images/Brains.png";
 import KlassicSolutionsLogo from "@/assets/images/KlassicSolutions.png";
 import KlassicMarketingLogo from "@/assets/images/KlassicMarketing.png";
@@ -12,6 +12,7 @@ import HYTLogo from "@/assets/images/HYT.png";
 import LuxuriousCleaningLogo from "@/assets/images/LuxuriousCleaningCo.png";
 import LevelUpLogo from "@/assets/images/LEVELUPLOGO.png";
 import HYTGlobalInstituteLogo from "@/assets/images/HGI.png";
+import MillenniumLogo from "@/assets/images/MillenniumLogo.png";
 
 // Animated Counter Component
 function AnimatedCounter({ 
@@ -92,7 +93,7 @@ function AnimatedCounter({
 }
 
 export function About() {
-  const companies = [
+  const companies: { src: string; alt: string; link: string; tile?: boolean }[] = [
     { src: BrainsLogo, alt: "Brains Infinite Innovations", link: "https://www.brains.asia/" },
     { src: KlassicSolutionsLogo, alt: "Klassic Solutions", link: "https://klassic-attendance.vercel.app/" },
     { src: KlassicMarketingLogo, alt: "Klassic Marketing", link: "https://connectorcore.com/Klassic-Marketing-Inc-Website-master" },
@@ -102,6 +103,7 @@ export function About() {
     { src: LuxuriousCleaningLogo, alt: "Luxurious Cleaning Co.", link: "https://luxurious-cleaning-co.vercel.app/" },
     { src: LevelUpLogo, alt: "Level Up", link: "https://hyt-lvlup-efms.vercel.app/" },
     { src: HYTGlobalInstituteLogo, alt: "HYT Global Institute Inc.", link: "https://hyt-global-visitor-authenticator.vercel.app/" },
+    { src: MillenniumLogo, alt: "Millennium", link: "https://millennium-brains.hytfoundationinterns-dreamacademy.workers.dev/", tile: true },
   ];
 
   const achievements = [
@@ -139,8 +141,8 @@ export function About() {
             >
               <div className="flex items-center justify-center bg-white/50 rounded-lg p-4" style={{ minHeight: "160px" }}>
                 <img
-                  src={KGCCLogo}
-                  alt="Klassic Group Capital Corporation"
+                  src={KGCBackground}
+                  alt="Klassic Group of Companies team"
                   className="w-full h-auto object-contain"
                   style={{ maxHeight: "140px" }}
                 />
@@ -201,7 +203,7 @@ export function About() {
           <p className="text-center text-lg font-semibold" style={{ color: DARK }}>
             Our Portfolio of Companies
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-8">
+          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-8">
             {companies.map((company, idx) => (
               <a
                 key={company.src + idx}
@@ -211,11 +213,28 @@ export function About() {
                 className="flex items-center gap-3 group cursor-pointer"
                 aria-label={`Visit ${company.alt}`}
               >
-                <img
-                  src={company.src}
-                  alt={company.alt}
-                  className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-all duration-300 group-hover:scale-110"
-                />
+                {company.tile ? (
+                  // A platinum wordmark reads as a thin line beside the pictorial
+                  // logos, so it sits on a dark tile at the same row height.
+                  // Hover: lift, platinum edge, and a slow metallic sheen sweep.
+                  <span className="relative flex h-11 md:h-12 items-center overflow-hidden rounded-xl bg-[#0F1115] px-4 shadow-sm ring-1 ring-white/10 transition-all duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-[1.03] group-hover:shadow-[0_10px_24px_-8px_rgba(15,17,21,0.55)] group-hover:ring-white/30 motion-reduce:transition-none">
+                    <span
+                      aria-hidden="true"
+                      className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[300%] motion-reduce:hidden"
+                    />
+                    <img
+                      src={company.src}
+                      alt={company.alt}
+                      className="relative h-[14px] w-auto md:h-[15px] object-contain transition-[filter] duration-300 group-hover:brightness-125"
+                    />
+                  </span>
+                ) : (
+                  <img
+                    src={company.src}
+                    alt={company.alt}
+                    className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-all duration-300 group-hover:scale-110"
+                  />
+                )}
               </a>
             ))}
           </div>

@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowRightIcon } from "@/components/ui/Icons";
 import { GOLD_TINT, GOLD_DARK, GOLD, GOLD_GRAD, DARK, SLATE, BORDER } from "@/constants/colors";
-import KGCCImage from "@/assets/images/KGCC.png";
+import KGCBackground from "@/assets/images/KGCbg.jpg";
 
 // Animated Counter Component
 function AnimatedCounter({ 
@@ -128,9 +128,9 @@ export function Hero() {
 
           {/* Image with Floating Stats */}
           <div className="relative hidden lg:block">
-            <div className="relative overflow-hidden rounded-2xl shadow-2xl" style={{ aspectRatio: "4/3" }}>
+            <div className="relative overflow-hidden rounded-2xl shadow-2xl" style={{ aspectRatio: "16/9" }}>
               <img
-                src={KGCCImage}
+                src={KGCBackground}
                 alt="Klassic Group of Companies — professional team"
                 className="w-full h-full object-cover"
                 loading="eager"
@@ -140,7 +140,7 @@ export function Hero() {
             
             {/* Floating Badge - Top Right - 7+ Industries with animation */}
             <div 
-              className="absolute -top-4 -right-4 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
+              className="absolute bottom-full right-0 translate-y-2 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
               style={{ fontFamily: "var(--font-display)" }}
             >
               <AnimatedCounter value="7+" duration={2000} />
@@ -149,7 +149,7 @@ export function Hero() {
 
             {/* Floating Badge - Bottom Left - 10+ Companies with animation */}
             <div 
-              className="absolute -bottom-5 -left-5 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
+              className="absolute top-full -translate-y-2 -left-5 bg-white rounded-xl shadow-xl px-6 py-4 border border-gray-100"
               style={{ fontFamily: "var(--font-display)" }}
             >
               <AnimatedCounter value="10+" duration={2000} />

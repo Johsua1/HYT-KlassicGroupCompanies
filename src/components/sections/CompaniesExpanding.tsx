@@ -9,7 +9,7 @@ import {
   Leaf,
   Sparkles,
   GraduationCap,
-  Shirt,
+  Presentation,
   Globe,
   BookOpen,
   ExternalLink
@@ -18,6 +18,7 @@ import { ExpandingCards, type CardItem } from "@/components/ui/ExpandingCards";
 import { companies, categories } from "@/data";
 import { FacebookIcon, InstagramIcon, YoutubeIcon } from "@/components/ui/Icons";
 import { GOLD_TINT, GOLD_DARK, GOLD_GRAD, GOLD, DARK, SLATE, BORDER } from "@/constants/colors";
+import { isLightNeutralColor } from "@/lib/utils";
 
 // Map company IDs to lucide-react icons
 const companyIcons: Record<string, React.ReactNode> = {
@@ -30,7 +31,7 @@ const companyIcons: Record<string, React.ReactNode> = {
   "green-oasis": <Leaf size={28} />,
   "luxurious-cleaning": <Sparkles size={28} />,
   "hyt-foundation": <GraduationCap size={28} />,
-  "finest-fit": <Shirt size={28} />,
+  "millennium": <Presentation size={28} />,
   "level-up": <Globe size={28} />,
   "hyt-global-institute": <BookOpen size={28} />,
 };
@@ -46,7 +47,7 @@ const companyBrandColors: Record<string, string> = {
   "green-oasis": "#4ADE80",            // Bright Green (nature-inspired, great visibility)
   "luxurious-cleaning": "#FFD93D",     // Bright Gold-Yellow (luxury, stands out)
   "hyt-foundation": "#FFB84D",         // Warm Gold (consistent with foundation branding)
-  "finest-fit": "#FFFFFF",             // Pure White (replaces black for visibility on black background)
+  "millennium": "#D2D2D2",             // Platinum silver — matches the official Millennium wordmark
   "level-up": "#38BDF8",               // Sky Blue (global, forward-looking)
   "hyt-global-institute": "#C084FC",   // Purple (academic, premium)
   "kgcc": "#FFB84D",                   // Warm Gold (Klassic brand, premium feel)
@@ -78,6 +79,7 @@ export function CompaniesExpanding() {
     services: company.services,
     category: company.category,
     brandColor: companyBrandColors[company.id] || GOLD, // Default to gold if not specified
+    hideTitle: company.wordmark,
   }));
 
   const handleCardClick = (item: CardItem) => {
@@ -221,24 +223,27 @@ export function CompaniesExpanding() {
                       <img
                         src={company.image}
                         alt={company.name}
-                        className="h-20 w-auto object-contain transition-transform duration-300 hover:scale-110"
+                        className="h-20 w-auto max-w-full object-contain transition-transform duration-300 hover:scale-110"
                         style={{
-                          filter: `drop-shadow(0 4px 20px ${brandColor}40)`
+                          // Platinum wordmarks need darkening on the light tile
+                          filter: `${company.darkLogo ? "brightness(0.32) " : ""}drop-shadow(0 4px 20px ${brandColor}40)`
                         }}
                       />
                     </div>
 
                     {/* Company Info */}
                     <div className="px-4 pb-4">
-                      <h3 
-                        className="text-lg font-bold mb-1"
-                        style={{ 
-                          color: DARK, 
-                          fontFamily: "var(--font-display)"
-                        }}
-                      >
-                        {company.name}
-                      </h3>
+                      {!company.wordmark && (
+                        <h3 
+                          className="text-lg font-bold mb-1"
+                          style={{ 
+                            color: DARK, 
+                            fontFamily: "var(--font-display)"
+                          }}
+                        >
+                          {company.name}
+                        </h3>
+                      )}
                       <p className="text-sm" style={{ color: SLATE }}>
                         {company.tagline}
                       </p>
@@ -282,14 +287,14 @@ export function CompaniesExpanding() {
           const modalBrandColorTint = `${modalBrandColor}15`; // 15% opacity for light background
           const modalBrandColorBorder = `${modalBrandColor}30`; // 30% opacity for borders
           
-          // Special handling for The Finest Fit (white brand color)
-          const isFinestFit = selectedCompany.id === "finest-fit";
-          const badgeTextColor = isFinestFit ? DARK : "#FFFFFF"; // Black text for white badge
-          const badgeBorderColor = isFinestFit ? BORDER : modalBrandColor; // Gray border for white badge
-          const buttonBgColor = isFinestFit ? DARK : modalBrandColor; // Dark button background for white brand
-          const buttonTextColor = "#FFFFFF"; // Always white text on buttons
-          const taglineColor = isFinestFit ? DARK : modalBrandColor; // Dark tagline for white brand
-          const serviceBulletColor = isFinestFit ? DARK : modalBrandColor; // Dark bullets for white brand
+          // Platinum/white brands need dark ink on the modal's light surfaces
+          const isLightBrand = isLightNeutralColor(modalBrandColor);
+          const badgeTextColor = isLightBrand ? DARK : "#FFFFFF";
+          const badgeBorderColor = isLightBrand ? BORDER : modalBrandColor;
+          const buttonBgColor = isLightBrand ? DARK : modalBrandColor;
+          const buttonTextColor = "#FFFFFF";
+          const taglineColor = isLightBrand ? DARK : modalBrandColor;
+          const serviceBulletColor = isLightBrand ? DARK : modalBrandColor;
           
           return (
             <div 
@@ -315,7 +320,8 @@ export function CompaniesExpanding() {
                       alt={selectedCompany.name}
                       className="max-w-full max-h-full object-contain transition-all"
                       style={{
-                        filter: `drop-shadow(0 0 20px ${modalBrandColor}60)`
+                        // A platinum wordmark disappears on the light header, so darken it there
+                        filter: `${isLightBrand ? "brightness(0.32) " : ""}drop-shadow(0 0 20px ${modalBrandColor}60)`
                       }}
                     />
                   </div>
@@ -345,9 +351,11 @@ export function CompaniesExpanding() {
                     >
                       {selectedCompany.category}
                     </div>
-                    <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 px-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
-                      {selectedCompany.name}
-                    </h2>
+                    {!selectedCompany.wordmark && (
+                      <h2 className="text-xl md:text-2xl lg:text-3xl font-bold mb-2 px-2" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+                        {selectedCompany.name}
+                      </h2>
+                    )}
                     <p className="text-base md:text-lg font-medium italic px-2" style={{ color: taglineColor }}>
                       {selectedCompany.tagline}
                     </p>
