@@ -146,9 +146,9 @@ export const ExpandingCards = React.forwardRef<
   return (
     <ul
       className={cn(
-        "w-full max-w-full gap-2",
+        "w-full max-w-full gap-3",
         "grid",
-        "h-[600px] md:h-[500px]",
+        "h-[500px]",
         // Reduced motion keeps a short, even transition instead of snapping:
         // no abrupt size jump, but far less travel time for motion-sensitive users.
         "motion-reduce:duration-[320ms] motion-reduce:ease-out",
@@ -209,7 +209,7 @@ export const ExpandingCards = React.forwardRef<
             style={{
               borderColor: isActive ? `${brand}66` : "rgba(255,255,255,0.06)",
               boxShadow: isActive
-                ? `0 24px 60px ${brand}40, 0 0 0 1px ${brand}26`
+                ? `0 24px 60px ${brand}40`
                 : "0 4px 16px rgba(0,0,0,0.12)",
             }}
             onMouseEnter={() => handleInteraction(index)}
@@ -271,7 +271,7 @@ export const ExpandingCards = React.forwardRef<
             {/* ACTIVE/EXPANDED STATE - Full Content (Always shown when defaultExpanded) */}
             <div
               className={cn(
-                "absolute inset-0 flex flex-col items-center justify-center overflow-hidden px-5 py-8 text-center",
+                "absolute inset-0 flex flex-col items-center justify-center overflow-hidden p-6 text-center",
                 isActive ? "pointer-events-auto" : "pointer-events-none"
               )}
             >
@@ -294,50 +294,57 @@ export const ExpandingCards = React.forwardRef<
               )}
 
               {/* Content Container — fixed width so the copy does not re-wrap
-                  while the card is still animating its width */}
-              <div className="relative z-10 flex w-full max-w-[18rem] flex-col items-center gap-3">
-                {/* Company Logo - Large */}
-                <img
-                  src={item.imgSrc}
-                  alt={item.title}
-                  onLoad={() => handleImageLoad(item.id)}
-                  onError={(e) => {
-                    e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23333' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ELogo%3C/text%3E%3C/svg%3E";
-                    handleImageLoad(item.id);
-                  }}
-                  className={cn(
-                    revealCls,
-                    "w-auto h-auto max-h-[88px] max-w-[240px] object-contain",
-                    !loaded && "opacity-0"
-                  )}
-                  style={{
-                    filter: `drop-shadow(0 6px 22px ${brand}80)`,
-                    ...revealDelay(0),
-                  }}
-                  loading="lazy"
-                />
+                  while the card is still animating its width. Every row below is
+                  a fixed-height slot, so the logo, name, tagline, socials and CTA
+                  sit on the same baseline in all cards regardless of copy length. */}
+              <div className="relative z-10 flex w-full max-w-[18rem] flex-col items-center gap-4">
+                {/* Company Logo - Large (fixed slot) */}
+                <div className="flex h-24 w-full shrink-0 items-center justify-center">
+                  <img
+                    src={item.imgSrc}
+                    alt={item.title}
+                    onLoad={() => handleImageLoad(item.id)}
+                    onError={(e) => {
+                      e.currentTarget.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Crect fill='%23333' width='200' height='200'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='middle' text-anchor='middle' font-family='sans-serif' font-size='16' fill='%23999'%3ELogo%3C/text%3E%3C/svg%3E";
+                      handleImageLoad(item.id);
+                    }}
+                    className={cn(
+                      revealCls,
+                      "max-h-24 max-w-[240px] object-contain",
+                      !loaded && "opacity-0"
+                    )}
+                    style={{
+                      filter: `drop-shadow(0 6px 22px ${brand}80)`,
+                      ...revealDelay(0),
+                    }}
+                    loading="lazy"
+                  />
+                </div>
 
                 {/* Company Name + Description — one beat, so the headline and
-                    its tagline arrive together instead of stepping separately */}
+                    its tagline arrive together instead of stepping separately.
+                    The name slot is reserved even when a wordmark hides it. */}
                 <div
-                  className={cn(revealCls, "flex w-full flex-col items-center gap-3")}
+                  className={cn(revealCls, "flex w-full shrink-0 flex-col items-center gap-2")}
                   style={revealDelay(1)}
                 >
-                  {!item.hideTitle && (
-                    <h3
-                      className="text-lg md:text-xl font-bold uppercase leading-tight tracking-wide [text-wrap:balance]"
-                      style={{
-                        color: brand,
-                        fontFamily: "var(--font-display)",
-                        textShadow: `0 2px 16px ${brand}59`,
-                      }}
-                    >
-                      {item.title}
-                    </h3>
-                  )}
+                  <div className="flex h-[3.25rem] w-full items-center justify-center">
+                    {!item.hideTitle && (
+                      <h3
+                        className="line-clamp-2 text-lg md:text-xl font-bold uppercase leading-tight tracking-wide [text-wrap:balance]"
+                        style={{
+                          color: brand,
+                          fontFamily: "var(--font-display)",
+                          textShadow: `0 2px 16px ${brand}59`,
+                        }}
+                      >
+                        {item.title}
+                      </h3>
+                    )}
+                  </div>
 
                   <p
-                    className="line-clamp-3 max-w-sm text-sm text-gray-300"
+                    className="line-clamp-3 h-[3.75rem] w-full text-sm leading-5 text-gray-300"
                     style={{ fontFamily: "var(--font-body)" }}
                   >
                     {item.description}
@@ -347,11 +354,11 @@ export const ExpandingCards = React.forwardRef<
                 {/* Social links + CTA share one reveal wrapper, so the stagger
                     delay only affects the fade-in and not their hover feedback */}
                 <div
-                  className={cn(revealCls, "flex w-full flex-col items-center gap-3")}
+                  className={cn(revealCls, "flex w-full shrink-0 flex-col items-center gap-4")}
                   style={revealDelay(2)}
                 >
                   {/* Social Links */}
-                  <div className="flex items-center gap-2 pt-1">
+                  <div className="flex h-9 items-center justify-center gap-2">
                     {item.socialLinks?.facebook && (
                       <a
                         href={item.socialLinks.facebook}
@@ -404,7 +411,7 @@ export const ExpandingCards = React.forwardRef<
 
                   {/* CTA Button */}
                   <button
-                    className="mt-2 rounded-lg border px-6 py-2.5 text-sm font-semibold backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
+                    className="h-10 rounded-lg border px-6 text-sm font-semibold backdrop-blur-sm transition-all hover:scale-105 active:scale-95"
                     style={{
                       background: `${brand}26`,
                       color: brand,

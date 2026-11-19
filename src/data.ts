@@ -184,7 +184,6 @@ export const companies: Company[] = [
     ],
     image: MillenniumImg,
     darkLogo: true,
-    wordmark: true,
     website: "https://millennium-brains.hytfoundationinterns-dreamacademy.workers.dev/",
     facebook: "https://www.facebook.com/millennium.brains.asia",
     youtube: "https://www.youtube.com/@MillenniumHYT",

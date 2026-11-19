@@ -173,7 +173,7 @@ export function CompaniesExpanding() {
         {filteredCompanies.length > 0 ? (
           <>
             {/* Desktop View - Expanding Cards Slider */}
-            <div className="hidden md:flex justify-center">
+            <div className="hidden lg:flex justify-center">
               <ExpandingCards 
                 items={cardItems}
                 onCardClick={handleCardClick}
@@ -185,14 +185,14 @@ export function CompaniesExpanding() {
             </div>
 
             {/* Mobile & Tablet View - Simple Card Grid */}
-            <div className="md:hidden grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
               {filteredCompanies.map((company, index) => {
                 const brandColor = companyBrandColors[company.id] || GOLD;
                 
                 return (
                   <div
                     key={company.id}
-                    className="bg-white rounded-xl border-2 shadow-sm hover:shadow-lg active:scale-[0.98] cursor-pointer overflow-hidden transform transition-all duration-300"
+                    className="flex h-full flex-col bg-white rounded-2xl border shadow-sm hover:shadow-lg active:scale-[0.98] cursor-pointer overflow-hidden transform transition-all duration-300"
                     style={{ 
                       borderColor: BORDER,
                       animation: `slideInUp 0.5s ease-out ${index * 0.1}s both`,
@@ -206,7 +206,7 @@ export function CompaniesExpanding() {
                     }}
                   >
                     {/* Category Badge */}
-                    <div className="px-4 pt-4 pb-2">
+                    <div className="px-5 pt-5 pb-3">
                       <span 
                         className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
                         style={{ 
@@ -218,12 +218,12 @@ export function CompaniesExpanding() {
                       </span>
                     </div>
 
-                    {/* Company Logo */}
-                    <div className="px-4 pb-4 flex items-center justify-center bg-gray-50 py-8">
+                    {/* Company Logo — fixed band so every card's name starts at the same height */}
+                    <div className="flex h-28 shrink-0 items-center justify-center bg-gray-50 px-5">
                       <img
                         src={company.image}
                         alt={company.name}
-                        className="h-20 w-auto max-w-full object-contain transition-transform duration-300 hover:scale-110"
+                        className="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110"
                         style={{
                           // Platinum wordmarks need darkening on the light tile
                           filter: `${company.darkLogo ? "brightness(0.32) " : ""}drop-shadow(0 4px 20px ${brandColor}40)`
@@ -231,20 +231,23 @@ export function CompaniesExpanding() {
                       />
                     </div>
 
-                    {/* Company Info */}
-                    <div className="px-4 pb-4">
-                      {!company.wordmark && (
-                        <h3 
-                          className="text-lg font-bold mb-1"
-                          style={{ 
-                            color: DARK, 
-                            fontFamily: "var(--font-display)"
-                          }}
-                        >
-                          {company.name}
-                        </h3>
-                      )}
-                      <p className="text-sm" style={{ color: SLATE }}>
+                    {/* Company Info — fixed two-line name and tagline slots keep
+                        every card the same height and every row on one baseline */}
+                    <div className="flex flex-1 flex-col gap-2 px-5 py-5">
+                      <div className="flex h-[3.5rem] items-center">
+                        {!company.wordmark && (
+                          <h3 
+                            className="line-clamp-2 text-lg font-bold leading-snug"
+                            style={{ 
+                              color: DARK, 
+                              fontFamily: "var(--font-display)"
+                            }}
+                          >
+                            {company.name}
+                          </h3>
+                        )}
+                      </div>
+                      <p className="line-clamp-2 h-[2.5rem] text-sm leading-5" style={{ color: SLATE }}>
                         {company.tagline}
                       </p>
                     </div>
@@ -261,13 +264,13 @@ export function CompaniesExpanding() {
                   : `${filteredCompanies.length} ${filteredCompanies.length === 1 ? 'Company' : 'Companies'} in ${categories.find(c => c.slug === selectedCategory)?.label}`
                 }
               </p>
-              <p className="text-sm hidden md:block" style={{ color: SLATE }}>
+              <p className="text-sm hidden lg:block" style={{ color: SLATE }}>
                 {selectedCategory === "all"
                   ? "Hover over any company to preview • Click to view full details"
                   : "All companies expanded • Click any card to view full details"
                 }
               </p>
-              <p className="text-sm md:hidden" style={{ color: SLATE }}>
+              <p className="text-sm lg:hidden" style={{ color: SLATE }}>
                 Tap any company to view full details
               </p>
             </div>
