@@ -243,7 +243,7 @@ export const ExpandingCards = React.forwardRef<
             {!defaultExpanded && (
               <div
                 className={cn(
-                  "absolute inset-0 flex items-center justify-center p-2",
+                  "absolute inset-0 flex items-center justify-center p-3",
                   "transition-[opacity,transform] ease-out will-change-transform motion-reduce:duration-150",
                   isActive
                     ? "opacity-0 scale-90 duration-200"
@@ -256,7 +256,7 @@ export const ExpandingCards = React.forwardRef<
                   alt={item.title}
                   onLoad={() => handleImageLoad(item.id)}
                   className={cn(
-                    "w-auto h-auto max-w-full max-h-[42px] object-contain transition-transform duration-300",
+                    "h-auto w-auto min-w-0 max-w-full max-h-[38px] 2xl:max-h-[42px] object-contain transition-transform duration-300",
                     "group-hover:scale-110",
                     !loaded && "opacity-0"
                   )}

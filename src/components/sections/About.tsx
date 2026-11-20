@@ -93,7 +93,7 @@ function AnimatedCounter({
 }
 
 export function About() {
-  const companies: { src: string; alt: string; link: string; tile?: boolean }[] = [
+  const companies: { src: string; alt: string; link: string; tile?: boolean; emblem?: boolean }[] = [
     { src: BrainsLogo, alt: "Brains Infinite Innovations", link: "https://www.brains.asia/" },
     { src: KlassicSolutionsLogo, alt: "Klassic Solutions", link: "https://klassic-attendance.vercel.app/" },
     { src: KlassicMarketingLogo, alt: "Klassic Marketing", link: "https://connectorcore.com/Klassic-Marketing-Inc-Website-master" },
@@ -102,7 +102,7 @@ export function About() {
     { src: HYTLogo, alt: "HYT Foundation", link: "https://hyt-foundation-inc.vercel.app/" },
     { src: LuxuriousCleaningLogo, alt: "Luxurious Cleaning Co.", link: "https://luxurious-cleaning-co.vercel.app/" },
     { src: LevelUpLogo, alt: "Level Up", link: "https://hyt-lvlup-efms.vercel.app/" },
-    { src: HYTGlobalInstituteLogo, alt: "HYT Global Institute Inc.", link: "https://hyt-global-visitor-authenticator.vercel.app/" },
+    { src: HYTGlobalInstituteLogo, alt: "HYT Global Institute Inc.", link: "https://hyt-global-visitor-authenticator.vercel.app/", tile: true, emblem: true },
     { src: MillenniumLogo, alt: "Millennium", link: "https://millennium-brains.hytfoundationinterns-dreamacademy.workers.dev/", tile: true },
   ];
 
@@ -114,32 +114,33 @@ export function About() {
   ];
 
   return (
-    <section id="about" className="py-32">
-      <div className="max-w-7xl mx-auto px-6 lg:px-8">
+    <section id="about" className="py-16 sm:py-24 lg:py-32">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="mb-14 grid gap-5 text-center md:grid-cols-2 md:text-left">
-          <h1 className="text-5xl font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+        <div className="mb-10 sm:mb-14 grid gap-4 sm:gap-5 text-center md:grid-cols-2 md:items-end md:text-left">
+          <h1 className="text-fluid-h2 font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
             About Us
           </h1>
-          <p style={{ color: SLATE }} className="text-lg">
+          <p style={{ color: SLATE }} className="text-fluid-lead md:pb-1">
             Klassic Group of Companies is a diversified organization dedicated to creating innovative solutions that empower businesses to thrive across multiple industries in the Philippines.
           </p>
         </div>
 
-        {/* Image Grid */}
-        <div className="grid gap-7 lg:grid-cols-3">
+        {/* Image Grid — 2 columns from tablet up so the gold card never
+            strands half a row, then the 3-column editorial split on desktop. */}
+        <div className="grid gap-5 sm:gap-7 md:grid-cols-5 lg:grid-cols-3">
           <img
             src={KGCTeamImage}
             alt="Klassic Group of Companies Team"
-            className="size-full max-h-[620px] rounded-xl object-cover lg:col-span-2 shadow-xl"
+            className="w-full aspect-[4/3] sm:aspect-[16/10] md:col-span-3 md:aspect-auto md:h-full md:max-h-[620px] lg:col-span-2 rounded-xl object-cover shadow-xl"
           />
-          <div className="flex flex-col gap-7 md:flex-row lg:flex-col">
+          <div className="md:col-span-2 lg:col-span-1">
             {/* Breakout Card */}
             <div 
-              className="flex flex-col justify-between gap-6 rounded-xl p-7 md:w-1/2 lg:w-auto shadow-lg h-full"
+              className="flex h-full flex-col justify-between gap-5 sm:gap-6 rounded-xl p-5 sm:p-7 shadow-lg"
               style={{ background: GOLD_TINT }}
             >
-              <div className="flex items-center justify-center bg-white/50 rounded-lg p-4" style={{ minHeight: "160px" }}>
+              <div className="flex items-center justify-center bg-white/50 rounded-lg p-3 sm:p-4" style={{ minHeight: "140px" }}>
                 <img
                   src={KGCBackground}
                   alt="Klassic Group of Companies team"
@@ -148,16 +149,16 @@ export function About() {
                 />
               </div>
               <div>
-                <p className="mb-2 text-lg font-bold" style={{ color: DARK }}>
+                <p className="mb-2 text-base sm:text-lg font-bold" style={{ color: DARK }}>
                   Building Businesses, Creating Opportunities
                 </p>
-                <p style={{ color: SLATE }}>
+                <p className="text-sm sm:text-base" style={{ color: SLATE }}>
                   A multi-industry group contributing to national progress through technology, services, and community development.
                 </p>
               </div>
               <Button 
                 variant="outline" 
-                className="mr-auto font-semibold"
+                className="mr-auto h-auto py-2.5 font-semibold"
                 style={{ 
                   borderColor: GOLD,
                   color: GOLD_DARK
@@ -171,10 +172,10 @@ export function About() {
         </div>
 
         {/* Mission & Vision Section */}
-        <div className="py-20">
-          <div className="grid sm:grid-cols-2 gap-6">
+        <div className="py-14 sm:py-20">
+          <div className="grid sm:grid-cols-2 gap-4 sm:gap-6">
             <div 
-              className="p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200" 
+              className="p-6 sm:p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200"
               style={{ borderColor: BORDER, borderLeft: `4px solid ${GOLD}` }}
             >
               <div className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
@@ -185,7 +186,7 @@ export function About() {
               </p>
             </div>
             <div 
-              className="p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200" 
+              className="p-6 sm:p-8 bg-white rounded-xl border shadow-lg hover:-translate-y-1 transition-transform duration-200"
               style={{ borderColor: BORDER, borderLeft: `4px solid ${GOLD}` }}
             >
               <div className="text-sm font-bold mb-3 uppercase tracking-wider" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
@@ -199,11 +200,11 @@ export function About() {
         </div>
 
         {/* Companies Section */}
-        <div className="py-16">
-          <p className="text-center text-lg font-semibold" style={{ color: DARK }}>
+        <div className="pb-14 sm:pb-16">
+          <p className="text-center text-base sm:text-lg font-semibold" style={{ color: DARK }}>
             Our Portfolio of Companies
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-x-6 gap-y-8">
+          <div className="mt-6 sm:mt-8 flex flex-wrap justify-center items-center gap-x-5 sm:gap-x-6 gap-y-6 sm:gap-y-8">
             {companies.map((company, idx) => (
               <a
                 key={company.src + idx}
@@ -214,10 +215,16 @@ export function About() {
                 aria-label={`Visit ${company.alt}`}
               >
                 {company.tile ? (
-                  // A platinum wordmark reads as a thin line beside the pictorial
-                  // logos, so it sits on a dark tile at the same row height.
-                  // Hover: lift, platinum edge, and a slow metallic sheen sweep.
-                  <span className="relative flex h-11 md:h-12 items-center overflow-hidden rounded-xl bg-[#0F1115] px-4 shadow-sm ring-1 ring-white/10 transition-all duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-[1.03] group-hover:shadow-[0_10px_24px_-8px_rgba(15,17,21,0.55)] group-hover:ring-white/30 motion-reduce:transition-none">
+                  // Platinum/silver marks (wordmark or emblem) read as a thin
+                  // grey line on white, so they sit on a dark tile at the same
+                  // row height. Hover: lift, platinum edge, metallic sheen sweep.
+                  <span
+                    className={`relative flex items-center overflow-hidden rounded-xl bg-[#0F1115] shadow-sm ring-1 ring-white/10 transition-all duration-300 ease-out group-hover:-translate-y-0.5 group-hover:scale-[1.03] group-hover:shadow-[0_10px_24px_-8px_rgba(15,17,21,0.55)] group-hover:ring-white/30 motion-reduce:transition-none ${
+                      company.emblem
+                        ? "h-11 sm:h-12 md:h-14 px-1.5"
+                        : "h-10 sm:h-11 md:h-12 px-3.5 sm:px-4"
+                    }`}
+                  >
                     <span
                       aria-hidden="true"
                       className="pointer-events-none absolute inset-y-0 -left-1/2 w-1/2 -skew-x-12 bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700 ease-out group-hover:translate-x-[300%] motion-reduce:hidden"
@@ -225,14 +232,16 @@ export function About() {
                     <img
                       src={company.src}
                       alt={company.alt}
-                      className="relative h-[14px] w-auto md:h-[15px] object-contain transition-[filter] duration-300 group-hover:brightness-125"
+                      className={`relative w-auto object-contain transition-[filter] duration-300 group-hover:brightness-125 ${
+                        company.emblem ? "h-9 sm:h-10 md:h-12" : "h-[14px] md:h-[15px]"
+                      }`}
                     />
                   </span>
                 ) : (
                   <img
                     src={company.src}
                     alt={company.alt}
-                    className="h-12 w-auto md:h-16 object-contain opacity-70 hover:opacity-100 transition-all duration-300 group-hover:scale-110"
+                    className="h-9 sm:h-12 md:h-16 w-auto max-w-full object-contain opacity-70 hover:opacity-100 transition-all duration-300 group-hover:scale-110"
                   />
                 )}
               </a>
@@ -242,21 +251,21 @@ export function About() {
 
         {/* Achievements Section */}
         <div 
-          className="relative overflow-hidden rounded-xl p-10 md:p-16 shadow-xl"
+          className="relative overflow-hidden rounded-xl p-6 sm:p-10 md:p-16 shadow-xl"
           style={{ background: GOLD_TINT }}
         >
-          <div className="flex flex-col gap-4 text-center">
-            <h2 className="text-4xl font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
+          <div className="flex flex-col gap-3 sm:gap-4 text-center">
+            <h2 className="text-fluid-h2 font-bold" style={{ color: DARK, fontFamily: "var(--font-display)" }}>
               Our Achievements in Numbers
             </h2>
-            <p className="max-w-screen-sm mx-auto" style={{ color: SLATE }}>
+            <p className="max-w-screen-sm mx-auto text-sm sm:text-base" style={{ color: SLATE }}>
               Providing businesses with effective tools to improve workflows, boost efficiency, and encourage growth across the Philippines.
             </p>
           </div>
-          <div className="mt-10 flex flex-wrap justify-center gap-10 text-center">
+          <div className="mt-8 sm:mt-10 grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-8 sm:gap-10 text-center">
             {achievements.map((item, idx) => (
-              <div className="flex flex-col gap-4" key={item.label + idx}>
-                <p className="font-medium" style={{ color: SLATE }}>{item.label}</p>
+              <div className="flex flex-col gap-2 sm:gap-4" key={item.label + idx}>
+                <p className="text-sm sm:text-base font-medium text-balance" style={{ color: SLATE }}>{item.label}</p>
                 <AnimatedCounter value={item.value} duration={2000} />
               </div>
             ))}

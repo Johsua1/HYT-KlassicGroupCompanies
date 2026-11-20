@@ -49,7 +49,7 @@ const companyBrandColors: Record<string, string> = {
   "hyt-foundation": "#FFB84D",         // Warm Gold (consistent with foundation branding)
   "millennium": "#D2D2D2",             // Platinum silver — matches the official Millennium wordmark
   "level-up": "#38BDF8",               // Sky Blue (global, forward-looking)
-  "hyt-global-institute": "#C084FC",   // Purple (academic, premium)
+  "hyt-global-institute": "#C6CFD9",   // Cool silver — matches the HGI emblem's metallic identity
   "kgcc": "#FFB84D",                   // Warm Gold (Klassic brand, premium feel)
 };
 
@@ -100,27 +100,29 @@ export function CompaniesExpanding() {
   };
 
   return (
-    <section id="companies" className="py-24" style={{ background: "#fff" }}>
-      <div className="max-w-[1460px] mx-auto px-6 lg:px-8">
+    <section id="companies" className="py-16 sm:py-20 lg:py-24" style={{ background: "#fff" }}>
+      <div className="max-w-[1460px] mx-auto px-5 sm:px-6 lg:px-8">
         {/* Header */}
-        <div className="text-center max-w-3xl mx-auto mb-12">
+        <div className="text-center max-w-3xl mx-auto mb-10 sm:mb-12">
           <div
-            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4"
+            className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wide mb-4"
             style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}
           >
             Our Portfolio
           </div>
-          <h2 className="text-3xl lg:text-4xl font-bold mb-4" style={{ color: DARK }}>
+          <h2 className="text-fluid-h2 font-bold mb-4" style={{ color: DARK }}>
             Companies Under the Klassic Group
           </h2>
-          <div className="w-12 h-0.5 mx-auto mb-6 rounded" style={{ background: GOLD_GRAD }} />
-          <p className="text-lg" style={{ color: SLATE }}>
+          <div className="w-12 h-0.5 mx-auto mb-5 sm:mb-6 rounded" style={{ background: GOLD_GRAD }} />
+          <p className="text-fluid-lead" style={{ color: SLATE }}>
             Discover our diversified portfolio of companies spanning technology, business services, marketing, construction, and professional excellence across industries.
           </p>
         </div>
 
-        {/* Category Filter Buttons - Premium Design */}
-        <div className="flex flex-wrap justify-center gap-3 mb-12 px-4">
+        {/* Category Filter Buttons - Premium Design.
+            Below sm the chips become a single scrollable rail instead of a
+            tall centred stack; from sm up they wrap and centre as designed. */}
+        <div className="mb-9 -mx-5 flex gap-2 overflow-x-auto px-5 pb-1 no-scrollbar sm:mx-0 sm:mb-12 sm:flex-wrap sm:justify-center sm:gap-3 sm:overflow-visible sm:px-0 sm:pb-0">
           {categories.map((category) => {
             const isActive = selectedCategory === category.slug;
             const count = category.slug === "all" 
@@ -131,7 +133,7 @@ export function CompaniesExpanding() {
               <button
                 key={category.slug}
                 onClick={() => setSelectedCategory(category.slug)}
-                className="group relative px-5 py-3 rounded-xl text-sm font-semibold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
+                className="group relative shrink-0 px-3.5 sm:px-5 py-2.5 sm:py-3 rounded-xl text-[13px] sm:text-sm font-semibold transition-all duration-300 border-2 focus:outline-none focus:ring-2 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 active:scale-95"
                 style={{
                   background: isActive ? GOLD_GRAD : "#fff",
                   color: isActive ? "#fff" : DARK,
@@ -142,14 +144,14 @@ export function CompaniesExpanding() {
                 disabled={count === 0}
                 aria-pressed={isActive}
               >
-                <span className="flex items-center gap-2.5">
+                <span className="flex items-center gap-2 sm:gap-2.5 whitespace-nowrap">
                   {category.label}
                   <span 
-                    className="text-xs font-bold px-2.5 py-0.5 rounded-full transition-all duration-300"
+                    className="text-[11px] sm:text-xs font-bold px-2 sm:px-2.5 py-0.5 rounded-full transition-all duration-300"
                     style={{
                       background: isActive ? "rgba(255,255,255,0.3)" : "rgba(201,144,26,0.12)",
                       color: isActive ? "white" : GOLD_DARK,
-                      minWidth: "28px",
+                      minWidth: "24px",
                       textAlign: "center"
                     }}
                   >
@@ -172,8 +174,10 @@ export function CompaniesExpanding() {
         {/* Companies Display - Same Design, Different Behavior */}
         {filteredCompanies.length > 0 ? (
           <>
-            {/* Desktop View - Expanding Cards Slider */}
-            <div className="hidden lg:flex justify-center">
+            {/* Desktop View - Expanding Cards Slider.
+                Only from xl up: below that, twelve collapsed columns are too
+                narrow to hold a logo, so the grid takes over. */}
+            <div className="hidden xl:flex justify-center">
               <ExpandingCards 
                 items={cardItems}
                 onCardClick={handleCardClick}
@@ -185,7 +189,7 @@ export function CompaniesExpanding() {
             </div>
 
             {/* Mobile & Tablet View - Simple Card Grid */}
-            <div className="lg:hidden grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <div className="xl:hidden grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3 sm:gap-4">
               {filteredCompanies.map((company, index) => {
                 const brandColor = companyBrandColors[company.id] || GOLD;
                 
@@ -206,9 +210,9 @@ export function CompaniesExpanding() {
                     }}
                   >
                     {/* Category Badge */}
-                    <div className="px-5 pt-5 pb-3">
+                    <div className="px-4 sm:px-5 pt-4 sm:pt-5 pb-2.5 sm:pb-3">
                       <span 
-                        className="inline-block text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
+                        className="inline-block text-[10px] sm:text-xs font-bold uppercase tracking-wider px-2 py-1 rounded-md"
                         style={{ 
                           background: GOLD_TINT,
                           color: GOLD_DARK
@@ -219,11 +223,11 @@ export function CompaniesExpanding() {
                     </div>
 
                     {/* Company Logo — fixed band so every card's name starts at the same height */}
-                    <div className="flex h-28 shrink-0 items-center justify-center bg-gray-50 px-5">
+                    <div className="flex h-24 sm:h-28 shrink-0 items-center justify-center bg-gray-50 px-4 sm:px-5">
                       <img
                         src={company.image}
                         alt={company.name}
-                        className="max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110"
+                        className="max-h-16 sm:max-h-20 max-w-full object-contain transition-transform duration-300 hover:scale-110"
                         style={{
                           // Platinum wordmarks need darkening on the light tile
                           filter: `${company.darkLogo ? "brightness(0.32) " : ""}drop-shadow(0 4px 20px ${brandColor}40)`
@@ -233,11 +237,11 @@ export function CompaniesExpanding() {
 
                     {/* Company Info — fixed two-line name and tagline slots keep
                         every card the same height and every row on one baseline */}
-                    <div className="flex flex-1 flex-col gap-2 px-5 py-5">
-                      <div className="flex h-[3.5rem] items-center">
+                    <div className="flex flex-1 flex-col gap-1.5 sm:gap-2 px-4 sm:px-5 py-4 sm:py-5">
+                      <div className="flex min-h-[3rem] sm:min-h-[3.5rem] items-center">
                         {!company.wordmark && (
                           <h3 
-                            className="line-clamp-2 text-lg font-bold leading-snug"
+                            className="line-clamp-3 text-base sm:text-lg font-bold leading-snug"
                             style={{ 
                               color: DARK, 
                               fontFamily: "var(--font-display)"
@@ -247,7 +251,7 @@ export function CompaniesExpanding() {
                           </h3>
                         )}
                       </div>
-                      <p className="line-clamp-2 h-[2.5rem] text-sm leading-5" style={{ color: SLATE }}>
+                      <p className="line-clamp-2 text-[13px] sm:text-sm leading-5" style={{ color: SLATE }}>
                         {company.tagline}
                       </p>
                     </div>
@@ -257,20 +261,20 @@ export function CompaniesExpanding() {
             </div>
 
             {/* Call to Action */}
-            <div className="text-center mt-12 space-y-3">
-              <p className="text-base font-semibold" style={{ color: DARK }}>
+            <div className="text-center mt-10 sm:mt-12 space-y-2 sm:space-y-3">
+              <p className="text-sm sm:text-base font-semibold text-balance px-2" style={{ color: DARK }}>
                 {selectedCategory === "all" 
                   ? `Explore All ${filteredCompanies.length} Companies Across ${categories.length - 1} Industries`
                   : `${filteredCompanies.length} ${filteredCompanies.length === 1 ? 'Company' : 'Companies'} in ${categories.find(c => c.slug === selectedCategory)?.label}`
                 }
               </p>
-              <p className="text-sm hidden lg:block" style={{ color: SLATE }}>
+              <p className="text-sm hidden xl:block" style={{ color: SLATE }}>
                 {selectedCategory === "all"
                   ? "Hover over any company to preview • Click to view full details"
                   : "All companies expanded • Click any card to view full details"
                 }
               </p>
-              <p className="text-sm lg:hidden" style={{ color: SLATE }}>
+              <p className="text-sm xl:hidden" style={{ color: SLATE }}>
                 Tap any company to view full details
               </p>
             </div>
@@ -301,14 +305,14 @@ export function CompaniesExpanding() {
           
           return (
             <div 
-              className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm"
+              className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 bg-black/60 backdrop-blur-sm"
               onClick={closeModal}
               style={{
                 animation: 'modalBackdropFade 0.3s ease-out'
               }}
             >
               <div 
-                className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto"
+                className="bg-white rounded-2xl shadow-2xl max-w-3xl w-full max-h-[92dvh] overflow-y-auto overscroll-contain"
                 onClick={(e) => e.stopPropagation()}
                 style={{
                   boxShadow: `0 0 80px ${modalBrandColor}40, 0 25px 50px -12px rgba(0, 0, 0, 0.4)`,
@@ -316,8 +320,8 @@ export function CompaniesExpanding() {
                 }}
               >
                 {/* Modal Header - Responsive height and spacing */}
-                <div className="relative h-32 md:h-40 lg:h-48 rounded-t-2xl overflow-hidden" style={{ background: "#FAFAFA" }}>
-                  <div className="absolute inset-0 flex items-center justify-center p-6 md:p-8">
+                <div className="relative h-28 sm:h-32 md:h-40 lg:h-48 rounded-t-2xl overflow-hidden" style={{ background: "#FAFAFA" }}>
+                  <div className="absolute inset-0 flex items-center justify-center p-5 sm:p-6 md:p-8">
                     <img
                       src={selectedCompany.image}
                       alt={selectedCompany.name}
@@ -331,6 +335,7 @@ export function CompaniesExpanding() {
                   <button
                     onClick={closeModal}
                     className="absolute top-3 right-3 md:top-4 md:right-4 w-9 h-9 md:w-10 md:h-10 rounded-full bg-gray-100 hover:bg-gray-200 active:scale-95 flex items-center justify-center transition-all"
+                    aria-label="Close company details"
                   >
                     <ExternalLink className="rotate-45" size={18} />
                   </button>
@@ -340,7 +345,7 @@ export function CompaniesExpanding() {
                 <div className="h-px" style={{ background: `linear-gradient(90deg, transparent, ${modalBrandColor}40, transparent)` }} />
 
                 {/* Modal Content - Responsive spacing and typography */}
-                <div className="p-5 md:p-7 lg:p-8 space-y-5 md:space-y-6">
+                <div className="p-4 sm:p-6 lg:p-8 space-y-5 md:space-y-6">
                   {/* Company Info */}
                   <div className="text-center">
                     <div 
@@ -527,16 +532,16 @@ export function CompaniesExpanding() {
                       )}
                     </div>
                     
-                    {/* Mobile (< md): Compact icon-only layout */}
-                    <div className="flex md:hidden justify-between items-center gap-3">
-                      {/* Social Icons - Left side, icon-only */}
+                    {/* Mobile (< md): stacked so nothing is squeezed off the edge */}
+                    <div className="flex flex-col gap-3 md:hidden">
+                      {/* Social Icons - icon-only row */}
                       <div className="flex items-center gap-2">
                         {selectedCompany.facebook && (
                           <a
                             href={selectedCompany.facebook}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            className="flex items-center justify-center w-11 h-11 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
                             aria-label="Facebook"
                           >
                             <FacebookIcon size={20} />
@@ -547,7 +552,7 @@ export function CompaniesExpanding() {
                             href={selectedCompany.instagram}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            className="flex items-center justify-center w-11 h-11 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
                             aria-label="Instagram"
                           >
                             <InstagramIcon size={20} />
@@ -558,7 +563,7 @@ export function CompaniesExpanding() {
                             href={selectedCompany.youtube}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center justify-center w-12 h-12 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
+                            className="flex items-center justify-center w-11 h-11 rounded-lg bg-gray-900 text-white hover:opacity-90 active:scale-95 transition-all"
                             aria-label="YouTube"
                           >
                             <YoutubeIcon size={20} />
@@ -566,22 +571,21 @@ export function CompaniesExpanding() {
                         )}
                       </div>
                       
-                      {/* Visit Website Button - Right side, fixed width */}
+                      {/* Visit Website Button - full width, easy to tap */}
                       {selectedCompany.website && selectedCompany.website !== "#" && (
                         <a
                           href={selectedCompany.website}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="flex items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold transition-all hover:opacity-90 active:scale-95"
+                          className="flex w-full items-center justify-center gap-2 px-4 py-3 rounded-lg text-sm font-bold transition-all hover:opacity-90 active:scale-[0.98]"
                           style={{ 
                             background: buttonBgColor, 
                             color: buttonTextColor,
-                            fontFamily: "var(--font-display)",
-                            minWidth: '140px'
+                            fontFamily: "var(--font-display)"
                           }}
                         >
                           <ExternalLink size={16} />
-                          <span>Visit</span>
+                          <span>Visit Website</span>
                         </a>
                       )}
                     </div>

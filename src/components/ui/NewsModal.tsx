@@ -53,13 +53,13 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
 
       {/* Modal */}
       <div
-        className={`fixed inset-0 z-50 flex items-center justify-center p-4 transition-all duration-300 ${
+        className={`fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4 transition-all duration-300 ${
           isOpen ? "opacity-100" : "opacity-0 pointer-events-none"
         }`}
         onClick={onClose}
       >
         <div
-          className={`bg-white rounded-2xl max-w-3xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transition-all duration-300 ${
+          className={`relative bg-white rounded-2xl max-w-3xl w-full max-h-[92dvh] overflow-y-auto overscroll-contain shadow-2xl transition-all duration-300 ${
             isOpen ? "scale-100 translate-y-0" : "scale-95 translate-y-4"
           }`}
           onClick={(e) => e.stopPropagation()}
@@ -70,11 +70,11 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
           {/* Close Button */}
           <button
             onClick={onClose}
-            className="absolute top-4 right-4 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-lg"
+            className="absolute top-3 right-3 sm:top-4 sm:right-4 z-10 p-2 rounded-full bg-white/90 backdrop-blur-sm hover:bg-white transition-colors shadow-lg"
             style={{ color: DARK }}
             aria-label="Close modal"
           >
-            <X size={24} />
+            <X size={22} />
           </button>
 
           {/* Hero Image */}
@@ -89,11 +89,11 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
           </div>
 
           {/* Content */}
-          <div className="p-8 lg:p-12">
+          <div className="p-5 sm:p-8 lg:p-12">
             {/* Category & Date */}
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex flex-wrap items-center gap-2 sm:gap-3 mb-4">
               <span
-                className="px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide"
+                className="px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wide whitespace-nowrap"
                 style={{
                   background: GOLD_TINT,
                   color: GOLD_DARK,
@@ -102,14 +102,14 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
               >
                 {article.category}
               </span>
-              <span className="text-sm" style={{ color: MUTED }}>
+              <span className="text-xs sm:text-sm" style={{ color: MUTED }}>
                 {article.date}
               </span>
             </div>
 
             {/* Title */}
             <h2
-              className="text-3xl lg:text-4xl font-bold mb-6 leading-tight"
+              className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-5 sm:mb-6 leading-tight text-balance"
               style={{ color: DARK, fontFamily: "var(--font-display)" }}
             >
               {article.title}
@@ -117,14 +117,14 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
 
             {/* Divider */}
             <div
-              className="w-16 h-1 rounded-full mb-6"
+              className="w-16 h-1 rounded-full mb-5 sm:mb-6"
               style={{ background: GOLD }}
             />
 
             {/* Article Content */}
             <div className="space-y-4">
               <p
-                className="text-lg leading-relaxed"
+                className="text-base sm:text-lg leading-relaxed"
                 style={{ color: SLATE }}
               >
                 {article.excerpt}
@@ -164,7 +164,7 @@ export function NewsModal({ article, isOpen, onClose }: NewsModalProps) {
 
             {/* CTA Section */}
             <div
-              className="mt-8 p-6 rounded-xl"
+              className="mt-6 sm:mt-8 p-5 sm:p-6 rounded-xl"
               style={{ background: GOLD_TINT }}
             >
               <p

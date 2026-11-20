@@ -35,7 +35,7 @@ const COMPANY_COLORS: Record<string, string> = {
   "hyt-foundation": "#FFB84D",
   "millennium": "#3F4750", // Steel tone so the silver brand stays legible on light surfaces
   "level-up": "#38BDF8",
-  "hyt-global-institute": "#C084FC",
+  "hyt-global-institute": "#4B5563", // Steel tone so the silver brand stays legible on light surfaces
   "general": GOLD,
 };
 
@@ -160,7 +160,7 @@ export function Contact() {
   return (
     <section 
       id="contact" 
-      className="py-24 relative overflow-hidden" 
+      className="py-16 sm:py-20 lg:py-24 relative overflow-hidden" 
       style={{ background: "#FAFAFA" }}
     >
       {/* Animated Background */}
@@ -194,10 +194,10 @@ export function Contact() {
         />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 relative z-10">
         {/* Header with entrance animation */}
         <div 
-          className="text-center max-w-2xl mx-auto mb-16"
+          className="text-center max-w-2xl mx-auto mb-12 sm:mb-16"
           style={{
             opacity: mounted ? 1 : 0,
             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
@@ -205,7 +205,7 @@ export function Contact() {
           }}
         >
           <div
-            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-xs font-semibold uppercase tracking-wide mb-6"
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wide mb-5 sm:mb-6"
             style={{ 
               background: `${GOLD}15`,
               color: GOLD_DARK, 
@@ -216,7 +216,7 @@ export function Contact() {
             <MailIcon size={14} /> Get In Touch
           </div>
           <h2 
-            className="text-4xl lg:text-5xl font-bold mb-4" 
+            className="text-fluid-h2 font-bold mb-4" 
             style={{ 
               color: DARK,
               fontFamily: "var(--font-display)",
@@ -225,10 +225,10 @@ export function Contact() {
             Let's Start a Conversation
           </h2>
           <div 
-            className="w-20 h-1 mx-auto mb-6 rounded-full" 
+            className="w-20 h-1 mx-auto mb-5 sm:mb-6 rounded-full" 
             style={{ background: GOLD_GRAD }}
           />
-          <p className="text-lg" style={{ color: SLATE }}>
+          <p className="text-fluid-lead" style={{ color: SLATE }}>
             Select the company you'd like to contact and we'll get back to you within 1-2 business days.
           </p>
         </div>
@@ -245,13 +245,13 @@ export function Contact() {
               }}
             >
               <h3 
-                className="text-2xl font-bold text-center mb-8" 
+                className="text-xl sm:text-2xl font-bold text-center mb-6 sm:mb-8 text-balance" 
                 style={{ color: DARK, fontFamily: "var(--font-display)" }}
               >
                 Who would you like to contact?
               </h3>
               
-              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 max-w-6xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-2.5 sm:gap-4 max-w-6xl mx-auto">
                 {companyOptions.map((company, index) => {
                   const isSelected = selectedCompany === company.id;
                   const companyColor = COMPANY_COLORS[company.id] || GOLD;
@@ -260,7 +260,7 @@ export function Contact() {
                     <button
                       key={company.id}
                       onClick={() => setSelectedCompany(company.id)}
-                      className="relative p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
+                      className="relative flex flex-col items-center p-3 sm:p-4 rounded-xl border-2 transition-all duration-300 hover:scale-105 active:scale-95 group"
                       style={{
                         background: isSelected ? `${companyColor}10` : "#fff",
                         borderColor: isSelected ? companyColor : BORDER,
@@ -285,11 +285,11 @@ export function Contact() {
                       
                       {/* Company Logo */}
                       {company.image && (
-                        <div className="mb-3 flex justify-center">
+                        <div className="mb-2.5 sm:mb-3 flex h-10 sm:h-12 w-full items-center justify-center">
                           <img 
                             src={company.image} 
                             alt={company.name}
-                            className="h-12 w-auto max-w-full object-contain transition-transform group-hover:scale-110"
+                            className="h-full w-auto max-w-full object-contain transition-transform group-hover:scale-110"
                             style={{
                               // Platinum wordmarks vanish on white cards — darken them here
                               filter: [
@@ -303,7 +303,7 @@ export function Contact() {
                       
                       {/* Company Name */}
                       <p 
-                        className="text-sm font-bold mb-1 text-center line-clamp-2"
+                        className="text-[13px] sm:text-sm font-bold mb-1 text-center line-clamp-3 text-balance"
                         style={{ 
                           color: isSelected ? companyColor : DARK,
                           fontFamily: "var(--font-display)",
@@ -314,7 +314,7 @@ export function Contact() {
                       
                       {/* Tagline */}
                       <p 
-                        className="text-xs text-center line-clamp-2"
+                        className="text-[11px] sm:text-xs text-center line-clamp-2"
                         style={{ color: SLATE }}
                       >
                         {company.tagline}
@@ -327,14 +327,14 @@ export function Contact() {
               {/* Selected Company Description */}
               {selectedCompany && (
                 <div 
-                  className="mt-8 max-w-2xl mx-auto p-6 rounded-xl"
+                  className="mt-6 sm:mt-8 max-w-2xl mx-auto p-4 sm:p-6 rounded-xl"
                   style={{
                     background: `${selectedCompanyColor}10`,
                     border: `1px solid ${selectedCompanyColor}30`,
                     animation: 'fadeInUp 0.5s ease-out',
                   }}
                 >
-                  <p className="text-center font-medium" style={{ color: DARK }}>
+                  <p className="text-sm sm:text-base text-center font-medium" style={{ color: DARK }}>
                     Your inquiry will be sent to:{" "}
                     <span style={{ color: selectedCompanyColor, fontWeight: 'bold' }}>
                       {companyOptions.find(c => c.id === selectedCompany)?.name}
@@ -355,7 +355,7 @@ export function Contact() {
             >
               <form 
                 onSubmit={handleSubmit} 
-                className="p-8 rounded-2xl border backdrop-blur-sm space-y-6"
+                className="p-5 sm:p-8 rounded-2xl border backdrop-blur-sm space-y-5 sm:space-y-6"
                 style={{ 
                   background: "rgba(255, 255, 255, 0.8)",
                   borderColor: BORDER,
@@ -375,7 +375,7 @@ export function Contact() {
                   </div>
                 )}
                 
-                <div className="grid sm:grid-cols-2 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 sm:gap-6">
                   {/* Name Field */}
                   <div className="space-y-2 group">
                     <label 
@@ -588,7 +588,7 @@ export function Contact() {
             </div>
             
             <h3 
-              className="text-3xl font-bold mb-4 flex items-center justify-center gap-2" 
+              className="text-2xl sm:text-3xl font-bold mb-4 flex flex-wrap items-center justify-center gap-2" 
               style={{ 
                 color: DARK, 
                 fontFamily: "var(--font-display)" 
@@ -598,7 +598,7 @@ export function Contact() {
               <PartyPopper size={28} color={selectedCompanyColor} />
             </h3>
             
-            <p className="text-lg mb-8" style={{ color: SLATE }}>
+            <p className="text-base sm:text-lg mb-8" style={{ color: SLATE }}>
               Thank you for reaching out to <span style={{ color: selectedCompanyColor, fontWeight: 'bold' }}>
                 {companyOptions.find(c => c.id === selectedCompany)?.name}
               </span>. We'll get back to you within 1-2 business days.
@@ -624,22 +624,22 @@ export function Contact() {
 
         {/* Contact Info Footer */}
         <div 
-          className="mt-20 grid md:grid-cols-3 gap-6 max-w-5xl mx-auto"
+          className="mt-14 sm:mt-20 grid sm:grid-cols-3 gap-4 sm:gap-6 max-w-5xl mx-auto"
           style={{
             opacity: mounted ? 1 : 0,
             transform: mounted ? 'translateY(0)' : 'translateY(20px)',
             transition: 'all 0.8s ease-out 0.6s',
           }}
         >
-          <div className="p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
+          <div className="p-5 sm:p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
             <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `${GOLD}15`, color: GOLD }}>
               <MailIcon />
             </div>
             <p className="text-xs font-bold uppercase tracking-wider mb-2" style={{ color: MUTED }}>Email</p>
-            <p className="text-sm font-semibold" style={{ color: DARK }}>bol76335@gmail.com</p>
+            <p className="text-sm font-semibold break-words" style={{ color: DARK }}>bol76335@gmail.com</p>
           </div>
 
-          <div className="p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
+          <div className="p-5 sm:p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
             <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `${GOLD}15`, color: GOLD }}>
               <PhoneIcon />
             </div>
@@ -647,7 +647,7 @@ export function Contact() {
             <p className="text-sm font-semibold" style={{ color: DARK }}>+63 (2) 8XXX-XXXX</p>
           </div>
 
-          <div className="p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
+          <div className="p-5 sm:p-6 rounded-xl text-center backdrop-blur-sm" style={{ background: "rgba(255, 255, 255, 0.6)" }}>
             <div className="w-12 h-12 rounded-full mx-auto mb-4 flex items-center justify-center" style={{ background: `${GOLD}15`, color: GOLD }}>
               <MapPinIcon />
             </div>

@@ -64,7 +64,7 @@ function AnimatedCounter({
   return (
     <div
       ref={ref}
-      className="text-4xl lg:text-5xl font-bold transition-all duration-300"
+      className="text-3xl sm:text-4xl lg:text-5xl font-bold transition-all duration-300"
       style={{ color, fontFamily: "var(--font-display)" }}
     >
       {targetNumber === 0 ? value : `${count}${suffix}`}
@@ -82,19 +82,19 @@ export function Stats() {
   
   return (
     <section style={{ background: DARK }}>
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+      <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8 py-12 sm:py-14 lg:py-16">
         {/* thin gold rule */}
-        <div className="w-16 h-0.5 mx-auto mb-12 rounded" style={{ background: GOLD_GRAD }} />
-        <div className="grid grid-cols-2 lg:grid-cols-4 gap-10">
+        <div className="w-16 h-0.5 mx-auto mb-10 sm:mb-12 rounded" style={{ background: GOLD_GRAD }} />
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-4 gap-y-9 sm:gap-x-8 sm:gap-y-10">
           {stats.map((s, i) => (
-            <div key={s.label} className="text-center space-y-1.5">
+            <div key={s.label} className="text-center space-y-1.5 px-1">
               <AnimatedCounter 
                 value={s.value} 
                 duration={2000} 
                 color={i % 2 === 0 ? GOLD : GOLD_LIGHT}
               />
-              <div className="text-sm font-semibold text-white" style={{ fontFamily: "var(--font-display)" }}>{s.label}</div>
-              <div className="text-xs" style={{ color: MUTED }}>{s.sub}</div>
+              <div className="text-[13px] sm:text-sm font-semibold text-white text-balance" style={{ fontFamily: "var(--font-display)" }}>{s.label}</div>
+              <div className="text-[11px] sm:text-xs" style={{ color: MUTED }}>{s.sub}</div>
             </div>
           ))}
         </div>

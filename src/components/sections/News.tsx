@@ -20,24 +20,24 @@ export function News() {
 
   return (
     <>
-      <section id="news" className="py-24" style={{ background: SURFACE }}>
-        <div className="max-w-7xl mx-auto px-6 lg:px-8">
-          <div className="flex items-end justify-between mb-12">
+      <section id="news" className="py-16 sm:py-20 lg:py-24" style={{ background: SURFACE }}>
+        <div className="max-w-7xl mx-auto px-5 sm:px-6 lg:px-8">
+          <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between mb-9 sm:mb-12">
             <div>
               <div
-                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wide mb-4"
+                className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full text-[11px] sm:text-xs font-semibold uppercase tracking-wide mb-4"
                 style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}
               >
                 News & Updates
               </div>
-              <h2 className="text-3xl lg:text-4xl font-bold" style={{ color: DARK }}>Latest From Klassic Group</h2>
+              <h2 className="text-fluid-h2 font-bold" style={{ color: DARK }}>Latest From Klassic Group</h2>
             </div>
-            <a href="#" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
+            <a href="#" className="hidden sm:inline-flex items-center gap-1.5 text-sm font-semibold whitespace-nowrap" style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
               View All <ArrowRightIcon size={14} />
             </a>
           </div>
 
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
             {newsItems.map(article => (
               <article
                 key={article.id}
@@ -47,18 +47,18 @@ export function News() {
                 <div className="overflow-hidden" style={{ aspectRatio: "16/9" }}>
                   <img src={article.image} alt={article.title} className="w-full h-full object-cover hover:scale-105 transition-transform duration-500" loading="lazy" />
                 </div>
-                <div className="p-5 flex flex-col flex-1 gap-3">
-                  <div className="flex items-center gap-3">
-                    <span className="px-2.5 py-1 rounded-full text-xs font-semibold" style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
+                <div className="p-4 sm:p-5 flex flex-col flex-1 gap-3">
+                  <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                    <span className="px-2.5 py-1 rounded-full text-[11px] sm:text-xs font-semibold whitespace-nowrap" style={{ background: GOLD_TINT, color: GOLD_DARK, fontFamily: "var(--font-display)" }}>
                       {article.category}
                     </span>
-                    <span className="text-xs" style={{ color: MUTED }}>{article.date}</span>
+                    <span className="text-[11px] sm:text-xs whitespace-nowrap" style={{ color: MUTED }}>{article.date}</span>
                   </div>
-                  <h3 className="font-bold leading-snug flex-1" style={{ color: DARK, fontFamily: "var(--font-display)" }}>{article.title}</h3>
+                  <h3 className="text-base sm:text-[17px] font-bold leading-snug flex-1" style={{ color: DARK, fontFamily: "var(--font-display)" }}>{article.title}</h3>
                   <p className="text-sm leading-relaxed" style={{ color: SLATE }}>{article.excerpt}</p>
                   <button
                     onClick={() => handleReadMore(article)}
-                    className="inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2 transition-all"
+                    className="inline-flex items-center gap-1.5 text-sm font-semibold hover:gap-2 transition-all self-start"
                     style={{ color: GOLD_DARK, fontFamily: "var(--font-display)" }}
                   >
                     Read More <ArrowRightIcon size={13} />
